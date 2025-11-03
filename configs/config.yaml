@@ -1,0 +1,100 @@
+# Project Configuration
+project:
+  name: mental-health-mlops
+  version: 0.1.0
+  seed: 42
+
+# Data Configuration
+data:
+  raw_data_path: data/raw/mental_health_data.csv
+  processed_data_path: data/processed/
+  test_size: 0.2
+  val_size: 0.1
+  text_column: text
+  label_column: label
+  classes:
+    - Normal
+    - Depression
+    - Suicidal
+    - Anxiety
+    - Bipolar
+    - Stress
+    - Personality disorder
+
+# Feature Engineering
+features:
+  max_length: 512
+  min_length: 10
+  remove_stopwords: true
+  lowercase: true
+  remove_special_chars: true
+
+# Model Configuration
+model:
+  type: transformer  # Options: transformer, classical
+  name: distilbert-base-uncased
+  num_labels: 7
+  hidden_dropout_prob: 0.1
+  attention_probs_dropout_prob: 0.1
+
+# Training Configuration
+training:
+  batch_size: 16
+  epochs: 10
+  learning_rate: 0.00002
+  weight_decay: 0.01
+  warmup_steps: 500
+  max_grad_norm: 1.0
+  eval_steps: 500
+  save_steps: 1000
+  logging_steps: 100
+  early_stopping_patience: 3
+
+# MLflow Configuration
+mlflow:
+  tracking_uri: http://localhost:5000
+  experiment_name: mental-health-sentiment-analysis
+  run_name_prefix: run
+  artifact_location: s3://mental-health-mlops-artifacts
+
+# DVC Configuration
+dvc:
+  remote: myremote
+  remote_url: s3://mental-health-mlops-data
+
+# Evaluation Metrics
+evaluation:
+  metrics:
+    - accuracy
+    - precision
+    - recall
+    - f1_score
+    - confusion_matrix
+  per_class_metrics: true
+
+# Drift Detection
+drift_detection:
+  enabled: true
+  reference_data_path: data/processed/reference_data.csv
+  detection_window: 1000  # number of samples
+  statistical_tests:
+    - kolmogorov_smirnov
+    - population_stability_index
+  thresholds:
+    data_drift: 0.1
+    prediction_drift: 0.15
+    performance_drift: 0.05
+
+# API Configuration
+api:
+  host: 0.0.0.0
+  port: 8000
+  workers: 4
+  log_level: info
+
+# Monitoring
+monitoring:
+  log_predictions: true
+  alert_on_drift: true
+  performance_threshold: 0.75
+  alert_email: admin@example.com
