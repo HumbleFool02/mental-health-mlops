@@ -50,3 +50,6 @@ textblob>=0.18.0
 
 # Logging and Monitoring
 loguru>=0.7.2
+
+#Notebook
+jupyter
