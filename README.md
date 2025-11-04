@@ -100,3 +100,16 @@ dvc pull
 2. Make changes and test
 3. Submit pull request
 
+## 📊 Data Management
+
+**Current Setup (Development)**:
+- Raw and processed data files are stored locally
+- Tracked in `.gitignore` to avoid large files in Git
+- Will be migrated to DVC + S3 storage before deployment
+
+**Data Files** (local only):
+- `data/raw/mental_health_data.csv` - Original dataset
+- `data/processed/train.csv` - Training set (70%)
+- `data/processed/val.csv` - Validation set (15%)
+- `data/processed/test.csv` - Test set (15%)
+- `data/processed/reference_data.csv` - Reference for drift detection
