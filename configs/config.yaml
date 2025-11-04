@@ -10,8 +10,8 @@ data:
   processed_data_path: data/processed/
   test_size: 0.2
   val_size: 0.1
-  text_column: text
-  label_column: label
+  text_column: statement
+  status_column: status
   classes:
     - Normal
     - Depression
