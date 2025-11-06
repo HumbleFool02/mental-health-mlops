@@ -1,0 +1,224 @@
+============================================================
+EXPERIMENT SUMMARY
+============================================================
+
+Rank 1: F1=0.7714
+  Model: lightgbm
+  Preprocessing: none
+  Resampling: smote
+
+Rank 2: F1=0.7649
+  Model: lightgbm
+  Preprocessing: none
+  Resampling: none
+
+Rank 3: F1=0.7590
+  Model: xgboost
+  Preprocessing: none
+  Resampling: none
+
+Rank 4: F1=0.7569
+  Model: xgboost
+  Preprocessing: stem
+  Resampling: none
+
+Rank 5: F1=0.7565
+  Model: xgboost
+  Preprocessing: lemma
+  Resampling: none
+
+Rank 6: F1=0.7539
+  Model: xgboost
+  Preprocessing: none
+  Resampling: smote
+
+Rank 7: F1=0.7445
+  Model: logistic
+  Preprocessing: none
+  Resampling: random_oversample
+
+Rank 8: F1=0.7401
+  Model: xgboost
+  Preprocessing: no_stopwords
+  Resampling: none
+
+Rank 9: F1=0.7162
+  Model: logistic
+  Preprocessing: none
+  Resampling: smote
+
+Rank 10: F1=0.6792
+  Model: random_forest
+  Preprocessing: none
+  Resampling: smote
+============================================================
+Experiment 1: xgboost_none_none
+============================================================
+Validation Metrics:
+  Accuracy: 0.7872
+  F1 (macro): 0.7590
+  F1 (weighted): 0.7844
+
+Per-Class F1 Scores (Validation):
+  Anxiety             : F1=0.805, P=0.826, R=0.785
+  Bipolar             : F1=0.791, P=0.923, R=0.692
+  Depression          : F1=0.749, P=0.745, R=0.753
+  Normal              : F1=0.904, P=0.864, R=0.948
+  Stress              : F1=0.622, P=0.664, R=0.585
+  Suicidal            : F1=0.683, P=0.703, R=0.664
+
+============================================================
+Experiment 2: xgboost_none_smote
+============================================================
+Validation Metrics:
+  Accuracy: 0.7798
+  F1 (macro): 0.7539
+  F1 (weighted): 0.7792
+
+Per-Class F1 Scores (Validation):
+  Anxiety             : F1=0.794, P=0.798, R=0.790
+  Bipolar             : F1=0.795, P=0.913, R=0.704
+  Depression          : F1=0.729, P=0.769, R=0.694
+  Normal              : F1=0.909, P=0.880, R=0.940
+  Stress              : F1=0.612, P=0.552, R=0.688
+  Suicidal            : F1=0.684, P=0.671, R=0.697
+
+============================================================
+Experiment 3: xgboost_stem_none
+============================================================
+Applying preprocessing: stem...
+Applying preprocessing: stem...
+Vectorizing text...
+Feature matrix shape: (36119, 5000)
+Training model...
+Making predictions...
+
+Validation Metrics:
+  Accuracy: 0.7880
+  F1 (macro): 0.7569
+  F1 (weighted): 0.7848
+
+Per-Class F1 Scores (Validation):
+  Anxiety             : F1=0.794, P=0.815, R=0.774
+  Bipolar             : F1=0.781, P=0.916, R=0.680
+  Depression          : F1=0.749, P=0.745, R=0.754
+  Normal              : F1=0.907, P=0.864, R=0.954
+  Stress              : F1=0.624, P=0.687, R=0.572
+  Suicidal            : F1=0.686, P=0.705, R=0.668
+
+============================================================
+Experiment 4: lightgbm_none_none
+============================================================
+Vectorizing text...
+Feature matrix shape: (36119, 5000)
+Training model...
+Making predictions...
+
+Validation Metrics:
+  Accuracy: 0.7925
+  F1 (macro): 0.7649
+  F1 (weighted): 0.7898
+
+Per-Class F1 Scores (Validation):
+  Anxiety             : F1=0.810, P=0.829, R=0.792
+  Bipolar             : F1=0.816, P=0.924, R=0.731
+  Depression          : F1=0.752, P=0.747, R=0.757
+  Normal              : F1=0.911, P=0.873, R=0.952
+  Stress              : F1=0.613, P=0.667, R=0.567
+  Suicidal            : F1=0.688, P=0.706, R=0.671
+
+============================================================
+Experiment 5: lightgbm_none_smote
+============================================================
+Vectorizing text...
+Feature matrix shape: (36119, 5000)
+Applying resampling: smote...
+Original samples: 36119
+Resampled samples: 68622
+Training model...
+Making predictions...
+
+Validation Metrics:
+  Accuracy: 0.7937
+  F1 (macro): 0.7714
+  F1 (weighted): 0.7937
+
+Per-Class F1 Scores (Validation):
+  Anxiety             : F1=0.814, P=0.822, R=0.807
+  Bipolar             : F1=0.824, P=0.925, R=0.743
+  Depression          : F1=0.747, P=0.775, R=0.721
+  Normal              : F1=0.915, P=0.894, R=0.938
+  Stress              : F1=0.629, P=0.563, R=0.711
+  Suicidal            : F1=0.699, P=0.692, R=0.705
+
+============================================================
+Experiment 6: logistic_none_smote
+============================================================
+Vectorizing text...
+Feature matrix shape: (36119, 5000)
+Applying resampling: smote...
+Original samples: 36119
+Resampled samples: 68622
+Training model...
+Making predictions...
+
+Validation Metrics:
+  Accuracy: 0.7466
+  F1 (macro): 0.7162
+  F1 (weighted): 0.7520
+
+Per-Class F1 Scores (Validation):
+  Anxiety             : F1=0.745, P=0.686, R=0.816
+  Bipolar             : F1=0.766, P=0.776, R=0.757
+  Depression          : F1=0.717, P=0.769, R=0.671
+  Normal              : F1=0.870, P=0.914, R=0.829
+  Stress              : F1=0.522, P=0.426, R=0.673
+  Suicidal            : F1=0.677, P=0.640, R=0.720
+
+============================================================
+Experiment 7: logistic_none_random_oversample
+============================================================
+Vectorizing text...
+Feature matrix shape: (36119, 5000)
+Applying resampling: random_oversample...
+Original samples: 36119
+Resampled samples: 68622
+Training model...
+Making predictions...
+
+Validation Metrics:
+  Accuracy: 0.7755
+  F1 (macro): 0.7445
+  F1 (weighted): 0.7763
+
+Per-Class F1 Scores (Validation):
+  Anxiety             : F1=0.779, P=0.773, R=0.785
+  Bipolar             : F1=0.765, P=0.744, R=0.788
+  Depression          : F1=0.722, P=0.792, R=0.663
+  Normal              : F1=0.912, P=0.905, R=0.920
+  Stress              : F1=0.597, P=0.515, R=0.709
+  Suicidal            : F1=0.692, P=0.662, R=0.726
+
+============================================================
+Experiment 8: random_forest_none_smote
+============================================================
+Vectorizing text...
+Feature matrix shape: (36119, 5000)
+Applying resampling: smote...
+Original samples: 36119
+Resampled samples: 68622
+Training model...
+Making predictions...
+
+Validation Metrics:
+  Accuracy: 0.7143
+  F1 (macro): 0.6792
+  F1 (weighted): 0.7102
+
+Per-Class F1 Scores (Validation):
+  Anxiety             : F1=0.704, P=0.805, R=0.625
+  Bipolar             : F1=0.700, P=0.863, R=0.589
+  Depression          : F1=0.667, P=0.741, R=0.605
+  Normal              : F1=0.835, P=0.757, R=0.931
+  Stress              : F1=0.543, P=0.451, R=0.680
+  Suicidal            : F1=0.627, P=0.642, R=0.613
