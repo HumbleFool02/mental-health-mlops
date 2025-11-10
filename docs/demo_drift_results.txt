@@ -1,0 +1,484 @@
+======================================================================
+This demo showcases all drift detection capabilities:
+  1. Data Drift - Changes in input data distribution
+  2. Concept Drift - Changes in model performance
+  3. Prediction Drift - Changes in prediction distribution
+  4. Gradual Drift - Drift detection over time
+======================================================================
+
+======================================================================
+DEMO 1: DATA DRIFT DETECTION
+======================================================================
+
+📊 Scenario 1: No Drift (Validation Data)
+----------------------------------------------------------------------
+======================================================================
+DATA DRIFT DETECTION REPORT
+======================================================================
+Timestamp: 2025-11-10T17:18:33.642879
+Samples analyzed: 7740
+Overall Drift Score: 0.0019
+Overall Drift: NO ✅
+
+Feature-wise Analysis:
+----------------------------------------------------------------------
+
+Text Length:
+  PSI: 0.0018 ✅ OK
+  KS Statistic: 0.0104
+  Reference Mean: 559.04
+  Current Mean: 565.12
+  Change: +1.1%
+
+Word Count:
+  PSI: 0.0020 ✅ OK
+  KS Statistic: 0.0090
+  Reference Mean: 110.53
+  Current Mean: 111.13
+  Change: +0.5%
+
+Avg Word Length:
+  PSI: 0.0015 ✅ OK
+  KS Statistic: 0.0095
+  Reference Mean: 4.17
+  Current Mean: 4.56
+  Change: +9.3%
+
+Unique Words:
+  PSI: 0.0024 ✅ OK
+  KS Statistic: 0.0089
+  Reference Mean: 65.59
+  Current Mean: 65.98
+  Change: +0.6%
+
+======================================================================
+
+📊 Scenario 2: Seasonal Drift (Winter)
+----------------------------------------------------------------------
+======================================================================
+DATA DRIFT DETECTION REPORT
+======================================================================
+Timestamp: 2025-11-10T17:18:33.927902
+Samples analyzed: 7740
+Overall Drift Score: 0.0019
+Overall Drift: NO ✅
+
+Feature-wise Analysis:
+----------------------------------------------------------------------
+
+Text Length:
+  PSI: 0.0017 ✅ OK
+  KS Statistic: 0.0094
+  Reference Mean: 559.04
+  Current Mean: 566.48
+  Change: +1.3%
+
+Word Count:
+  PSI: 0.0018 ✅ OK
+  KS Statistic: 0.0084
+  Reference Mean: 110.53
+  Current Mean: 111.30
+  Change: +0.7%
+
+Avg Word Length:
+  PSI: 0.0018 ✅ OK
+  KS Statistic: 0.0120
+  Reference Mean: 4.17
+  Current Mean: 4.57
+  Change: +9.4%
+
+Unique Words:
+  PSI: 0.0022 ✅ OK
+  KS Statistic: 0.0086
+  Reference Mean: 65.59
+  Current Mean: 66.07
+  Change: +0.7%
+
+======================================================================
+
+📊 Scenario 3: Length Drift (2x longer texts)
+----------------------------------------------------------------------
+======================================================================
+DATA DRIFT DETECTION REPORT
+======================================================================
+Timestamp: 2025-11-10T17:18:34.281821
+Samples analyzed: 7740
+Overall Drift Score: 0.1718
+Overall Drift: YES ⚠️
+
+Feature-wise Analysis:
+----------------------------------------------------------------------
+
+Text Length:
+  PSI: 0.3462 ⚠️ DRIFT
+  KS Statistic: 0.2054
+  Reference Mean: 559.04
+  Current Mean: 1132.24
+  Change: +102.5%
+
+Word Count:
+  PSI: 0.3371 ⚠️ DRIFT
+  KS Statistic: 0.2028
+  Reference Mean: 110.53
+  Current Mean: 222.26
+  Change: +101.1%
+
+Avg Word Length:
+  PSI: 0.0015 ✅ OK
+  KS Statistic: 0.0095
+  Reference Mean: 4.17
+  Current Mean: 4.56
+  Change: +9.3%
+
+Unique Words:
+  PSI: 0.0024 ✅ OK
+  KS Statistic: 0.0089
+  Reference Mean: 65.59
+  Current Mean: 65.98
+  Change: +0.6%
+
+======================================================================
+
+======================================================================
+DEMO 2: CONCEPT DRIFT DETECTION
+======================================================================
+
+📊 Scenario 1: No Drift (5% Error Rate)
+----------------------------------------------------------------------
+======================================================================
+CONCEPT DRIFT DETECTION REPORT
+======================================================================
+Timestamp: 2025-11-10T17:18:34.520865
+Samples analyzed: 7740
+Overall Drift: NO ✅
+
+Performance Comparison:
+----------------------------------------------------------------------
+
+ACCURACY:
+  Reference: 0.7937
+  Current:   0.9579
+  Change:    -20.7% ✅ OK
+
+F1 MACRO:
+  Reference: 0.8189
+  Current:   0.9398
+  Change:    -14.8% ✅ OK
+
+F1 WEIGHTED:
+  Reference: 0.8200
+  Current:   0.9584
+  Change:    -16.9% ✅ OK
+
+Per-Class Performance:
+----------------------------------------------------------------------
+
+Anxiety:
+  Reference F1: 0.8140
+  Current F1:   0.9298
+  Change:       -0.1158 ✅
+
+Bipolar:
+  Reference F1: 0.8240
+  Current F1:   0.9089
+  Change:       -0.0849 ✅
+
+Depression:
+  Reference F1: 0.7470
+  Current F1:   0.9710
+  Change:       -0.2240 ✅
+
+Normal:
+  Reference F1: 0.9150
+  Current F1:   0.9675
+  Change:       -0.0525 ✅
+
+Stress:
+  Reference F1: 0.6290
+  Current F1:   0.8969
+  Change:       -0.2679 ✅
+
+Suicidal:
+  Reference F1: 0.7100
+  Current F1:   0.9645
+  Change:       -0.2545 ✅
+
+======================================================================
+
+📊 Scenario 2: Performance Drift (25% Error Rate)
+----------------------------------------------------------------------
+======================================================================
+CONCEPT DRIFT DETECTION REPORT
+======================================================================
+Timestamp: 2025-11-10T17:18:34.528283
+Samples analyzed: 7740
+Overall Drift: YES ⚠️
+Degraded Metrics: f1_macro
+
+Performance Comparison:
+----------------------------------------------------------------------
+
+ACCURACY:
+  Reference: 0.7937
+  Current:   0.7904
+  Change:    +0.4% ✅ OK
+
+F1 MACRO:
+  Reference: 0.8189
+  Current:   0.7326
+  Change:    +10.5% ⚠️ DRIFT
+
+F1 WEIGHTED:
+  Reference: 0.8200
+  Current:   0.7992
+  Change:    +2.5% ✅ OK
+
+Per-Class Performance:
+----------------------------------------------------------------------
+
+Anxiety:
+  Reference F1: 0.8140
+  Current F1:   0.6923
+  Change:       +0.1217 ⚠️
+
+Bipolar:
+  Reference F1: 0.8240
+  Current F1:   0.6007
+  Change:       +0.2233 ⚠️
+
+Depression:
+  Reference F1: 0.7470
+  Current F1:   0.8459
+  Change:       -0.0989 ✅
+
+Normal:
+  Reference F1: 0.9150
+  Current F1:   0.8352
+  Change:       +0.0798 ⚠️
+
+Stress:
+  Reference F1: 0.6290
+  Current F1:   0.6084
+  Change:       +0.0206 ✅
+
+Suicidal:
+  Reference F1: 0.7100
+  Current F1:   0.8131
+  Change:       -0.1031 ✅
+
+======================================================================
+
+======================================================================
+DEMO 3: PREDICTION DRIFT DETECTION
+======================================================================
+
+📊 Scenario 1: No Drift (Same Distribution)
+----------------------------------------------------------------------
+======================================================================
+PREDICTION DRIFT DETECTION REPORT
+======================================================================
+Timestamp: 2025-11-10T17:18:34.564275
+Samples analyzed: 4740
+Overall Drift: NO ✅
+
+Divergence Metrics:
+  JS Divergence:         0.0146 (threshold: 0.1)
+  Wasserstein Distance:  0.0257
+
+Per-Class Distribution Comparison:
+----------------------------------------------------------------------
+
+Anxiety:
+  Reference: 0.073 (7.3%)
+  Current:   0.075 (7.5%)
+  Change:    +0.002 (+3.2%)
+
+Bipolar:
+  Reference: 0.051 (5.1%)
+  Current:   0.055 (5.5%)
+  Change:    +0.004 (+8.8%)
+
+Depression:
+  Reference: 0.296 (29.6%)
+  Current:   0.300 (30.0%)
+  Change:    +0.004 (+1.2%)
+
+Normal:
+  Reference: 0.326 (32.6%)
+  Current:   0.311 (31.1%)
+  Change:    -0.016 (-4.8%)
+
+Stress:
+  Reference: 0.047 (4.7%)
+  Current:   0.052 (5.2%)
+  Change:    +0.005 (+9.6%)
+
+Suicidal:
+  Reference: 0.206 (20.6%)
+  Current:   0.207 (20.7%)
+  Change:    +0.001 (+0.4%)
+
+======================================================================
+
+📊 Scenario 2: Population Shift (More Anxiety Cases)
+----------------------------------------------------------------------
+======================================================================
+PREDICTION DRIFT DETECTION REPORT
+======================================================================
+Timestamp: 2025-11-10T17:18:34.567469
+Samples analyzed: 7740
+Overall Drift: YES ⚠️
+
+Divergence Metrics:
+  JS Divergence:         0.1919 (threshold: 0.1)
+  Wasserstein Distance:  0.4905
+
+Per-Class Distribution Comparison:
+----------------------------------------------------------------------
+
+Anxiety:
+  Reference: 0.073 (7.3%)
+  Current:   0.233 (23.3%)
+  Change:    +0.160 (+218.7%)
+
+Bipolar:
+  Reference: 0.051 (5.1%)
+  Current:   0.054 (5.4%)
+  Change:    +0.003 (+5.4%)
+
+Depression:
+  Reference: 0.296 (29.6%)
+  Current:   0.299 (29.9%)
+  Change:    +0.002 (+0.8%)
+
+Normal:
+  Reference: 0.326 (32.6%)
+  Current:   0.158 (15.8%)
+  Change:    -0.168 (-51.5%)
+
+Stress:
+  Reference: 0.047 (4.7%)
+  Current:   0.050 (5.0%)
+  Change:    +0.003 (+5.9%)
+
+Suicidal:
+  Reference: 0.206 (20.6%)
+  Current:   0.206 (20.6%)
+  Change:    +0.000 (+0.2%)
+
+======================================================================
+
+📊 Scenario 3: Extreme Drift (Model Collapse)
+----------------------------------------------------------------------
+======================================================================
+PREDICTION DRIFT DETECTION REPORT
+======================================================================
+Timestamp: 2025-11-10T17:18:34.568034
+Samples analyzed: 4740
+Overall Drift: YES ⚠️
+
+Divergence Metrics:
+  JS Divergence:         0.5871 (threshold: 0.1)
+  Wasserstein Distance:  1.2360
+
+Per-Class Distribution Comparison:
+----------------------------------------------------------------------
+
+Anxiety:
+  Reference: 0.073 (7.3%)
+  Current:   0.000 (0.0%)
+  Change:    -0.073 (-100.0%)
+
+Bipolar:
+  Reference: 0.051 (5.1%)
+  Current:   0.000 (0.0%)
+  Change:    -0.051 (-100.0%)
+
+Depression:
+  Reference: 0.296 (29.6%)
+  Current:   1.000 (100.0%)
+  Change:    +0.704 (+237.5%)
+
+Normal:
+  Reference: 0.326 (32.6%)
+  Current:   0.000 (0.0%)
+  Change:    -0.326 (-100.0%)
+
+Stress:
+  Reference: 0.047 (4.7%)
+  Current:   0.000 (0.0%)
+  Change:    -0.047 (-100.0%)
+
+Suicidal:
+  Reference: 0.206 (20.6%)
+  Current:   0.000 (0.0%)
+  Change:    -0.206 (-100.0%)
+
+======================================================================
+
+======================================================================
+DEMO 4: GRADUAL DRIFT DETECTION
+======================================================================
+
+📊 Monitoring Drift Over 6 Time Periods
+----------------------------------------------------------------------
+
+Time Period 0:
+  Avg Text Length: 565 chars
+  Drift Score: 0.0019
+  Drift Detected: NO ✅
+
+Time Period 1:
+  Avg Text Length: 566 chars
+  Drift Score: 0.0019
+  Drift Detected: NO ✅
+
+Time Period 2:
+  Avg Text Length: 566 chars
+  Drift Score: 0.0019
+  Drift Detected: NO ✅
+
+Time Period 3:
+  Avg Text Length: 566 chars
+  Drift Score: 0.0019
+  Drift Detected: NO ✅
+
+Time Period 4:
+  Avg Text Length: 566 chars
+  Drift Score: 0.0019
+  Drift Detected: NO ✅
+
+Time Period 5:
+  Avg Text Length: 566 chars
+  Drift Score: 0.0019
+  Drift Detected: NO ✅
+
+======================================================================
+📊 DRIFT DETECTION SUMMARY
+======================================================================
+
+✅ Data Drift Detection:
+   - No Drift Scenario: PASS
+   - Seasonal Drift: NOT DETECTED
+   - Length Drift: DETECTED
+
+✅ Concept Drift Detection:
+   - Good Performance: NO DRIFT
+   - Degraded Performance: DRIFT DETECTED
+
+✅ Prediction Drift Detection:
+   - Same Distribution: NO DRIFT
+   - Population Shift: DRIFT DETECTED
+   - Model Collapse: DRIFT DETECTED
+
+======================================================================
+🎉 ALL DRIFT DETECTION DEMOS COMPLETED!
+======================================================================
+
+💡 Key Capabilities Demonstrated:
+   ✅ Multiple drift types detected
+   ✅ Statistical tests (PSI, KS, JS Divergence)
+   ✅ Realistic drift scenarios
+   ✅ Gradual drift monitoring
+   ✅ Per-class analysis
+======================================================================
