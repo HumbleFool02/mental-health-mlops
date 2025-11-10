@@ -1,7 +1,6 @@
 ============================================================
 EXPERIMENT SUMMARY
 ============================================================
-
 Rank 1: F1=0.7714
   Model: lightgbm
   Preprocessing: none
@@ -86,13 +85,6 @@ Per-Class F1 Scores (Validation):
 ============================================================
 Experiment 3: xgboost_stem_none
 ============================================================
-Applying preprocessing: stem...
-Applying preprocessing: stem...
-Vectorizing text...
-Feature matrix shape: (36119, 5000)
-Training model...
-Making predictions...
-
 Validation Metrics:
   Accuracy: 0.7880
   F1 (macro): 0.7569
@@ -109,11 +101,6 @@ Per-Class F1 Scores (Validation):
 ============================================================
 Experiment 4: lightgbm_none_none
 ============================================================
-Vectorizing text...
-Feature matrix shape: (36119, 5000)
-Training model...
-Making predictions...
-
 Validation Metrics:
   Accuracy: 0.7925
   F1 (macro): 0.7649
