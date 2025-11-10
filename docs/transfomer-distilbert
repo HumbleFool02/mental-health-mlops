@@ -1,0 +1,24 @@
+TRANSFORMER EXPERIMENTS SUMMARY
+================================
+
+Experiment 1: Baseline (no class weights)
+- F1 Macro: 0.8104
+- Suicidal F1: 0.693
+- Training time: 20.2 min
+
+Experiment 2: WITH Class Weights ⭐ WINNER
+- F1 Macro: 0.8189
+- Suicidal F1: 0.710
+- Suicidal Recall: 0.741
+
+Experiment 3: Higher LR (5e-5)
+- F1 Macro: 0.8153
+- Suicidal F1: 0.689
+
+Experiment 4: Lower LR (1e-5) 🌟 BEST SUICIDAL
+- F1 Macro: 0.8152
+- Suicidal F1: 0.721
+- Suicidal Recall: 0.772
+
+BEST MODEL: Experiment 2
+IMPROVEMENT: +4.8% vs LightGBM baseline
