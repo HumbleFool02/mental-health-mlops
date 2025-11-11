@@ -4,6 +4,7 @@ Predictor class for making predictions with DistilBERT
 
 import logging
 from typing import Dict, List
+
 import torch
 
 logger = logging.getLogger(__name__)
