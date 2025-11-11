@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Classification</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧠 Mental Health Classification System</h1>
+            <p class="subtitle">AI-powered mental health support text analysis</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Input Section -->
+            <div class="card input-section">
+                <h2>📝 Enter Text for Analysis</h2>
+                <textarea
+                    id="inputText"
+                    placeholder="Example: I feel anxious and can't sleep at night..."
+                    rows="6"
+                ></textarea>
+
+                <div class="button-group">
+                    <button id="predictBtn" class="btn-primary">Analyze Text</button>
+                    <button id="clearBtn" class="btn-secondary">Clear</button>
+                </div>
+
+                <div id="exampleTexts" class="example-section">
+                    <p><strong>Try these examples:</strong></p>
+                    <button class="example-btn" data-text="I feel anxious and can't sleep at night">Anxiety Example</button>
+                    <button class="example-btn" data-text="Everything is going well and I'm feeling great">Normal Example</button>
+                    <button class="example-btn" data-text="I feel sad and hopeless about the future">Depression Example</button>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="card results-section" id="resultsSection" style="display: none;">
+                <h2>📊 Analysis Results</h2>
+
+                <div class="prediction-result">
+                    <div class="prediction-label">
+                        <span class="label-text">Predicted Category:</span>
+                        <span id="predictionLabel" class="prediction-value"></span>
+                    </div>
+                    <div class="confidence-bar">
+                        <span class="confidence-text">Confidence: <span id="confidenceValue">0%</span></span>
+                        <div class="progress-bar">
+                            <div id="confidenceProgress" class="progress-fill"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h3>Probability Distribution</h3>
+                    <canvas id="probabilityChart"></canvas>
+                </div>
+
+                <div class="metadata">
+                    <p><strong>Model:</strong> <span id="modelVersion">-</span></p>
+                    <p><strong>Timestamp:</strong> <span id="timestamp">-</span></p>
+                    <p><strong>Drift Status:</strong> <span id="driftStatus" class="status-badge">-</span></p>
+                </div>
+
+                <div class="warning-box">
+                    <strong>⚠️ Important Notice:</strong> This is an AI model for research purposes only.
+                    If you're experiencing mental health concerns, please contact a qualified healthcare professional
+                    or crisis helpline.
+                </div>
+            </div>
+
+            <!-- Model Info Section -->
+            <div class="card info-section">
+                <h2>ℹ️ Model Information</h2>
+                <div id="modelInfo" class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Model:</span>
+                        <span class="info-value" id="infoModelName">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">F1 Score:</span>
+                        <span class="info-value" id="infoF1">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Accuracy:</span>
+                        <span class="info-value" id="infoAccuracy">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Classes:</span>
+                        <span class="info-value" id="infoClasses">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">API Status:</span>
+                        <span class="info-value status-badge" id="apiStatus">Checking...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Mental Health MLOps Capstone Project | DistilBERT Transformer Model</p>
+            <p><a href="/docs" target="_blank">API Documentation</a></p>
+        </footer>
+    </div>
+
+    <div id="loading" class="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+        <p>Analyzing...</p>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
