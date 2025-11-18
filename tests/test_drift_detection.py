@@ -10,12 +10,12 @@ import numpy as np
 import pandas as pd
 import pytest
 from sklearn.preprocessing import LabelEncoder
-from src.monitoring.data_drift import DataDriftDetector
+
 from src.monitoring.concept_drift import ConceptDriftDetector
+from src.monitoring.data_drift import DataDriftDetector
 
 # Add project root to path
-sys.path.insert(0, os.path.abspath(
-    os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 
 class TestDataDriftDetector:

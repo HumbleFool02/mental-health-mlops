@@ -18,6 +18,7 @@ from src.monitoring.data_drift import DataDriftDetector
 from src.monitoring.drift_simulator import DriftSimulator
 from src.monitoring.prediction_drift import PredictionDriftDetector
 
+
 def demo_data_drift():
     """Demo 1: Data Drift Detection"""
 
