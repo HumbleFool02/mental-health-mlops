@@ -1,0 +1,69 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Git
+.git/
+.gitignore
+
+# MLflow
+mlruns/
+mlartifacts/
+
+# Data (we'll handle separately)
+data/raw/
+
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# Notebooks
+notebooks/
+
+# Tests (not needed in production)
+tests/
+
+# Environment files
+.env.local
+.env.development
+
+# Large files
+*.zip
+*.tar.gz
+*.model
+*.pkl
+
+# Logs
+*.log
+logs/
+
+/docs
+/misc

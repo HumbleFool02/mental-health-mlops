@@ -1,0 +1,59 @@
+# docker-compose.yml
+
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: mental-health-api
+
+    ports:
+      - "8000:8000"
+
+    volumes:
+      # Mount code for development (hot reload)
+      - ./src:/app/src
+      # Mount models (if updated locally)
+      - ./models:/app/models
+      # Mount logs (persist logs outside container)
+      - ./logs:/app/logs
+
+    environment:
+      - ENV=development
+      - LOG_LEVEL=info
+
+    restart: unless-stopped
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+    # Resource limits (optional, for production)
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '1.0'
+          memory: 2G
+
+  # Optional: Add monitoring (uncomment for production)
+  # prometheus:
+  #   image: prom/prometheus
+  #   ports:
+  #     - "9090:9090"
+  #   volumes:
+  #     - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  # Optional: Add visualization (uncomment for production)
+  # grafana:
+  #   image: grafana/grafana
+  #   ports:
+  #     - "3000:3000"
