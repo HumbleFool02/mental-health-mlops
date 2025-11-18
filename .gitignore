@@ -49,6 +49,7 @@ mlartifacts/
 # DVC
 /data/raw/*
 /data/processed/*
+!data/processed/reference_data.csv
 /models/*.pkl
 /models/*.h5
 /models/*.pt
