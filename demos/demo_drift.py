@@ -10,14 +10,13 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 
+# Add project root to path
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+
 from src.monitoring.concept_drift import ConceptDriftDetector
 from src.monitoring.data_drift import DataDriftDetector
 from src.monitoring.drift_simulator import DriftSimulator
 from src.monitoring.prediction_drift import PredictionDriftDetector
-
-# Add project root to path
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-
 
 def demo_data_drift():
     """Demo 1: Data Drift Detection"""
