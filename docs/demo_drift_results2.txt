@@ -1,0 +1,383 @@
+================================================================================
+🎬 SCENARIO 1: EXTREME TEXT LENGTH CHANGE
+================================================================================
+Real-world: Users start writing much longer descriptions
+Impact: Text 3x longer than training data
+
+Loading data...
+Simulating extreme length drift...
+✅ Length Drift: Changed 1000 samples by 3.0x
+
+================================================================================
+📊 DRIFT COMPARISON REPORT
+================================================================================
+
+📅 Timestamp: 2025-11-18T20:36:29.392648
+📦 Samples: 1000
+
+📏 TEXT LENGTH:
+   Original: 569.4 ± 872.4 chars
+   Drifted:  1708.1 ± 2617.2 chars
+   Change:   +200.0% 🚨
+
+📝 WORD COUNT:
+   Original: 112.7 words
+   Drifted:  337.6 words
+   Change:   +199.6% 🚨
+
+📊 CLASS DISTRIBUTION:
+   Original:
+      Anxiety        :   7.0%
+      Bipolar        :   5.0%
+      Depression     :  31.4%
+      Normal         :  32.8%
+      Stress         :   5.5%
+      Suicidal       :  18.3%
+   Drifted:
+      Anxiety        :   7.0% (+0%) ✅
+      Bipolar        :   5.0% (+0%) ✅
+      Depression     :  31.4% (+0%) ✅
+      Normal         :  32.8% (+0%) ✅
+      Stress         :   5.5% (+0%) ✅
+      Suicidal       :  18.3% (+0%) ✅
+
+📄 SAMPLE COMPARISONS:
+
+   Sample 1:
+   Original: o i wish the frog weren t becoming extinct http tinyurl com cxe w...
+   Drifted:  o i wish the frog weren t becoming extinct http tinyurl com cxe w o i wish the frog weren t becoming extinct http tinyurl com cxe w o i wish the frog weren t becoming extinct http tinyurl com cxe...
+
+   Sample 2:
+   Original: hi i wa wondering if anyone ha this happen to them i have have had depression for decade i have good day and bad day no period that last for week or month like i did when i first started having sympto...
+   Drifted:  hi i wa wondering if anyone ha this happen to them i have have had depression for decade i have good day and bad day no period that last for week or month like i did when i first started having sympto...
+
+   Sample 3:
+   Original: new ebook stress management get the inside story my new ebook about personal stress management, the resist method how to be stressresilient in just 7 days. if you want to know more, click this link....
+   Drifted:  new ebook stress management get the inside story my new ebook about personal stress management, the resist method how to be stressresilient in just 7 days. if you want to know more, click this link. n...
+
+================================================================================
+
+🔍 RUNNING DRIFT DETECTION...
+
+================================================================================
+🔍 DATA DRIFT DETECTION RESULTS
+================================================================================
+
+🚨 DRIFT DETECTED!
+📊 Overall Drift Score (PSI): 0.3562
+📦 Samples analyzed: 1000
+🚨 Features with drift: 2
+
+📋 Per-Feature Analysis:
+   text_length         : PSI=0.6769, Change=+200.0% 🚨 DRIFT
+   word_count          : PSI=0.6996, Change=+199.6% 🚨 DRIFT
+   avg_word_length     : PSI=0.0128, Change=-1.7% ✅ OK
+   unique_words        : PSI=0.0352, Change=+4.4% ✅ OK
+================================================================================
+
+✅ SUCCESS: Drift correctly detected!
+   System identified 2 features with significant drift
+
+✅ Scenario 1 completed successfully!
+
+================================================================================
+🎬 SCENARIO 2: HEAVY SLANG INJECTION
+================================================================================
+Real-world: Platform becomes popular with Gen Z
+Impact: 80% of text uses slang ('down bad', 'no cap', etc.)
+
+Loading data...
+Simulating heavy slang injection...
+✅ Slang Drift: Transformed 800 samples with Gen Z slang
+
+================================================================================
+📊 DRIFT COMPARISON REPORT
+================================================================================
+
+📅 Timestamp: 2025-11-18T20:36:42.086091
+📦 Samples: 1000
+
+📏 TEXT LENGTH:
+   Original: 569.4 ± 872.4 chars
+   Drifted:  572.7 ± 874.7 chars
+   Change:   +0.6% ✅
+
+📝 WORD COUNT:
+   Original: 112.7 words
+   Drifted:  112.6 words
+   Change:   -0.1% ✅
+
+📊 CLASS DISTRIBUTION:
+   Original:
+      Anxiety        :   7.0%
+      Bipolar        :   5.0%
+      Depression     :  31.4%
+      Normal         :  32.8%
+      Stress         :   5.5%
+      Suicidal       :  18.3%
+   Drifted:
+      Anxiety        :   7.0% (+0%) ✅
+      Bipolar        :   5.0% (+0%) ✅
+      Depression     :  31.4% (+0%) ✅
+      Normal         :  32.8% (+0%) ✅
+      Stress         :   5.5% (+0%) ✅
+      Suicidal       :  18.3% (+0%) ✅
+
+📄 SAMPLE COMPARISONS:
+
+   Sample 1:
+   Original: o i wish the frog weren t becoming extinct http tinyurl com cxe w...
+   Drifted:  o i wish the frog weren t becoming extinct http tinyurl com cxe w...
+
+   Sample 2:
+   Original: hi i wa wondering if anyone ha this happen to them i have have had depression for decade i have good day and bad day no period that last for week or month like i did when i first started having sympto...
+   Drifted:  hi i wa wondering if anyone ha this happen to them ive got have had big down bad for decade ive got gucci day and bad day no period that last for week or month like i did when i first started having s...
+
+   Sample 3:
+   Original: new ebook stress management get the inside story my new ebook about personal stress management, the resist method how to be stressresilient in just 7 days. if you want to know more, click this link....
+   Drifted:  new ebook stress management get the inside story my new ebook about dudeal stress management, the resist method how to be stressresilient in just 7 days. if you want to know more, click this link....
+
+================================================================================
+
+🔍 RUNNING DRIFT DETECTION...
+/Users/skynet/Repositories/mental-health-mlops/venv/lib/python3.13/site-packages/scipy/stats/_axis_nan_policy.py:579: RuntimeWarning: ks_2samp: Exact calculation unsuccessful. Switching to method=asymp.
+  res = hypotest_fun_out(*samples, **kwds)
+
+================================================================================
+🔍 DATA DRIFT DETECTION RESULTS
+================================================================================
+
+✅ NO DRIFT
+📊 Overall Drift Score (PSI): 0.0031
+📦 Samples analyzed: 1000
+🚨 Features with drift: 0
+
+📋 Per-Feature Analysis:
+   text_length         : PSI=0.0001, Change=+0.6% ✅ OK
+   word_count          : PSI=0.0003, Change=-0.1% ✅ OK
+   avg_word_length     : PSI=0.0113, Change=+0.4% ✅ OK
+   unique_words        : PSI=0.0005, Change=+1.6% ✅ OK
+================================================================================
+
+⚠️  Note: Slang changes vocabulary, not necessarily length/word count
+   This demonstrates the importance of multi-detector approach
+
+✅ Scenario 2 completed successfully!
+
+================================================================================
+🎬 SCENARIO 3: POPULATION COLLAPSE
+================================================================================
+Real-world: Platform becomes known for anxiety support
+Impact: Anxiety cases go from 7% → 85%!
+
+Loading data...
+Original Anxiety %: 7.0%
+
+Simulating population collapse...
+✅ Population Collapse: Anxiety now 85.0% of data
+   Before: 7.0%
+   After:  85.0%
+Drifted Anxiety %: 85.0%
+
+================================================================================
+📊 DRIFT COMPARISON REPORT
+================================================================================
+
+📅 Timestamp: 2025-11-18T20:36:51.668677
+📦 Samples: 1000
+
+📏 TEXT LENGTH:
+   Original: 569.4 ± 872.4 chars
+   Drifted:  654.8 ± 726.2 chars
+   Change:   +15.0% ✅
+
+📝 WORD COUNT:
+   Original: 112.7 words
+   Drifted:  126.4 words
+   Change:   +12.2% ✅
+
+📊 CLASS DISTRIBUTION:
+   Original:
+      Anxiety        :   7.0%
+      Bipolar        :   5.0%
+      Depression     :  31.4%
+      Normal         :  32.8%
+      Stress         :   5.5%
+      Suicidal       :  18.3%
+   Drifted:
+      Anxiety        :  85.0% (+1114%) 🚨
+      Bipolar        :   0.7% (-86%) 🚨
+      Depression     :   4.9% (-84%) 🚨
+      Normal         :   5.8% (-82%) 🚨
+      Stress         :   0.8% (-85%) 🚨
+      Suicidal       :   2.8% (-85%) 🚨
+
+📄 SAMPLE COMPARISONS:
+
+   Sample 1:
+   Original: o i wish the frog weren t becoming extinct http tinyurl com cxe w...
+   Drifted:  ive been trying to get help for months its so frustrating our healthcare system is so over burdened. the psychiatrist in town has an almost 9 month wait list but i finally got in. the communityparent ...
+
+   Sample 2:
+   Original: hi i wa wondering if anyone ha this happen to them i have have had depression for decade i have good day and bad day no period that last for week or month like i did when i first started having sympto...
+   Drifted:  ive been trying to get help for months its so frustrating our healthcare system is so over burdened. the psychiatrist in town has an almost 9 month wait list but i finally got in. the communityparent ...
+
+   Sample 3:
+   Original: new ebook stress management get the inside story my new ebook about personal stress management, the resist method how to be stressresilient in just 7 days. if you want to know more, click this link....
+   Drifted:  having huge anxiety about my second emergency dentist appointment tomotrow i scheduled an emergency tooth extraction appointment last saturday with my dentist who i havent been able to go to in over a...
+
+================================================================================
+
+🔍 RUNNING PREDICTION DRIFT DETECTION...
+
+================================================================================
+🔍 PREDICTION DRIFT DETECTION RESULTS
+================================================================================
+
+🚨 DRIFT DETECTED!
+📦 Samples analyzed: 1000
+
+📊 JS Divergence: 0.5933
+   Threshold: 0.1 🚨 ABOVE
+📊 Wasserstein Distance: 2.3460
+
+📊 Class Distribution Changes:
+   Anxiety        :   7.0% →  85.0% (+1114.3%) 🚨🚨
+   Bipolar        :   5.0% →   0.7% ( -86.0%) 🚨
+   Depression     :  31.4% →   4.9% ( -84.4%) 🚨
+   Normal         :  32.8% →   5.8% ( -82.3%) 🚨
+   Stress         :   5.5% →   0.8% ( -85.5%) 🚨
+   Suicidal       :  18.3% →   2.8% ( -84.7%) 🚨
+================================================================================
+
+✅ SUCCESS: Population shift detected!
+   JS Divergence: 0.5933 (threshold: 0.1)
+   This dramatic shift would trigger immediate investigation
+
+✅ Scenario 3 completed successfully!
+
+================================================================================
+🎬 SCENARIO 4: CATASTROPHIC MULTI-DRIFT
+================================================================================
+Real-world: Multiple factors change simultaneously
+Impact: Everything drifts at once!
+
+Loading data...
+Simulating catastrophic multi-drift...
+
+🚨 SIMULATING CATASTROPHIC DRIFT...
+============================================================
+✅ Length Drift: Changed 600 samples by 0.4x
+✅ Slang Drift: Transformed 900 samples with Gen Z slang
+✅ Noise Injection: Added heavy noise to 500 samples
+✅ Population Collapse: Anxiety now 85.0% of data
+   Before: 7.0%
+   After:  85.0%
+============================================================
+🚨 CATASTROPHIC DRIFT COMPLETE!
+
+================================================================================
+📊 DRIFT COMPARISON REPORT
+================================================================================
+
+📅 Timestamp: 2025-11-18T20:37:04.299951
+📦 Samples: 1000
+
+📏 TEXT LENGTH:
+   Original: 569.4 ± 872.4 chars
+   Drifted:  463.8 ± 587.4 chars
+   Change:   -18.5% ✅
+
+📝 WORD COUNT:
+   Original: 112.7 words
+   Drifted:  89.9 words
+   Change:   -20.2% 🚨
+
+📊 CLASS DISTRIBUTION:
+   Original:
+      Anxiety        :   7.0%
+      Bipolar        :   5.0%
+      Depression     :  31.4%
+      Normal         :  32.8%
+      Stress         :   5.5%
+      Suicidal       :  18.3%
+   Drifted:
+      Anxiety        :  85.0% (+1114%) 🚨
+      Bipolar        :   0.7% (-86%) 🚨
+      Depression     :   4.9% (-84%) 🚨
+      Normal         :   5.8% (-82%) 🚨
+      Stress         :   0.8% (-85%) 🚨
+      Suicidal       :   2.8% (-85%) 🚨
+
+📄 SAMPLE COMPARISONS:
+
+   Sample 1:
+   Original: o i wish the frog weren t becoming extinct http tinyurl com cxe w...
+   Drifted:  ive been trying to get help for months its so frustrating our healthcare system is so over burdened. the psychiatrist in town has an almost 9 month wait list but i finally got in. the communityparent ...
+
+   Sample 2:
+   Original: hi i wa wondering if anyone ha this happen to them i have have had depression for decade i have good day and bad day no period that last for week or month like i did when i first started having sympto...
+   Drifted:  ive been trying to get help for months its so frustrating our healthcare system is so over burdened. the psychiatrist in town has an almost 9 month wait list but i finally got in. the communityparent ...
+
+   Sample 3:
+   Original: new ebook stress management get the inside story my new ebook about personal stress management, the resist method how to be stressresilient in just 7 days. if you want to know more, click this link....
+   Drifted:  having huge major anxiety vibes about my second emergency dentist appointment tomotrow i scheduled an emergency tooth extraction appointment last saturday with my dentist who ive gotnt been able to go...
+
+================================================================================
+
+🔍 RUNNING COMPREHENSIVE DRIFT DETECTION...
+
+1️⃣  Checking DATA DRIFT...
+
+================================================================================
+🔍 DATA DRIFT DETECTION RESULTS
+================================================================================
+
+🚨 DRIFT DETECTED!
+📊 Overall Drift Score (PSI): 0.1894
+📦 Samples analyzed: 1000
+🚨 Features with drift: 4
+
+📋 Per-Feature Analysis:
+   text_length         : PSI=0.1231, Change=-18.5% 🚨 DRIFT
+   word_count          : PSI=0.1960, Change=-20.2% 🚨 DRIFT
+   avg_word_length     : PSI=0.2843, Change=+2.4% 🚨 DRIFT
+   unique_words        : PSI=0.1540, Change=-13.9% 🚨 DRIFT
+================================================================================
+
+2️⃣  Checking PREDICTION DRIFT...
+
+================================================================================
+🔍 PREDICTION DRIFT DETECTION RESULTS
+================================================================================
+
+🚨 DRIFT DETECTED!
+📦 Samples analyzed: 1000
+
+📊 JS Divergence: 0.5933
+   Threshold: 0.1 🚨 ABOVE
+📊 Wasserstein Distance: 2.3460
+
+📊 Class Distribution Changes:
+   Anxiety        :   7.0% →  85.0% (+1114.3%) 🚨🚨
+   Bipolar        :   5.0% →   0.7% ( -86.0%) 🚨
+   Depression     :  31.4% →   4.9% ( -84.4%) 🚨
+   Normal         :  32.8% →   5.8% ( -82.3%) 🚨
+   Stress         :   5.5% →   0.8% ( -85.5%) 🚨
+   Suicidal       :  18.3% →   2.8% ( -84.7%) 🚨
+================================================================================
+
+================================================================================
+🚨 CATASTROPHIC DRIFT ASSESSMENT
+================================================================================
+🚨 CRITICAL: Both data and prediction drift detected!
+
+📋 Recommended Actions:
+   1. ⚠️  Immediate model retraining required
+   2. 🔄 Consider rolling back to previous model version
+   3. 🔍 Investigate root cause of drift
+   4. 📊 Analyze user behavior changes
+   5. 🛡️  Increase monitoring frequency
+================================================================================
+
+✅ Scenario 4 completed successfully!
