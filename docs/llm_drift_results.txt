@@ -1,0 +1,262 @@
+================================================================================
+🔍 ANALYZING: Length Drift (3x)
+================================================================================
+
+1️⃣  Loading data...
+   ✓ Loaded 10 original samples
+   ✓ Loaded 10 transformed samples
+
+2️⃣  Comparing statistics...
+   Original avg length: 514 chars
+   Transformed avg length: 1420 chars
+   Change: +176.6%
+
+3️⃣  Examples...
+
+   Example 1:
+   Original (65 chars):
+     'o i wish the frog weren t becoming extinct http tinyurl com cxe w...'
+   Transformed (741 chars):
+     'o i wish the frog weren t becoming extinct http tinyurl com cxe w it makes me so sad to think about ...'
+
+   Example 2:
+   Original (1511 chars):
+     'hi i wa wondering if anyone ha this happen to them i have have had depression for decade i have good...'
+   Transformed (2461 chars):
+     'hi i wa wondering if anyone ha this happen to them i have have had depression for decade now going o...'
+
+   Example 3:
+   Original (198 chars):
+     'new ebook stress management get the inside story my new ebook about personal stress management, the ...'
+   Transformed (1134 chars):
+     'new ebook stress management get the inside story my new ebook about personal stress management, the ...'
+
+4️⃣  Running drift detection...
+
+   🚨 DRIFT DETECTED
+   Drift Score (PSI): 9.8670
+   Features with drift: 4
+
+   Per-feature:
+     🚨 text_length: PSI=10.6198
+     🚨 word_count: PSI=10.6198
+     🚨 avg_word_length: PSI=7.4700
+     🚨 unique_words: PSI=10.7584
+
+================================================================================
+
+================================================================================
+🔍 ANALYZING: Slang Drift (Gen Z)
+================================================================================
+
+1️⃣  Loading data...
+   ✓ Loaded 10 original samples
+   ✓ Loaded 10 transformed samples
+
+2️⃣  Comparing statistics...
+   Original avg length: 514 chars
+   Transformed avg length: 1367 chars
+   Change: +166.1%
+
+3️⃣  Examples...
+
+   Example 1:
+   Original (65 chars):
+     'o i wish the frog weren t becoming extinct http tinyurl com cxe w...'
+   Transformed (760 chars):
+     'yo i wish frogs weren't going extinct fr http tinyurl com cxe w like deadass it makes me sad to thin...'
+
+   Example 2:
+   Original (1511 chars):
+     'hi i wa wondering if anyone ha this happen to them i have have had depression for decade i have good...'
+   Transformed (2064 chars):
+     'yo anyone else experience this? no cap i've had depression for decades now like 15-16 years at this ...'
+
+   Example 3:
+   Original (198 chars):
+     'new ebook stress management get the inside story my new ebook about personal stress management, the ...'
+   Transformed (1147 chars):
+     'new ebook stress management get the inside story my new ebook about personal stress management, the ...'
+
+4️⃣  Running drift detection...
+
+   🚨 DRIFT DETECTED
+   Drift Score (PSI): 10.2372
+   Features with drift: 4
+
+   Per-feature:
+     🚨 text_length: PSI=10.6198
+     🚨 word_count: PSI=10.7709
+     🚨 avg_word_length: PSI=8.7998
+     🚨 unique_words: PSI=10.7584
+
+================================================================================
+================================================================================
+🔍 ANALYZING: Formality Drift (Clinical)
+================================================================================
+
+1️⃣  Loading data...
+   ✓ Loaded 10 original samples
+   ✓ Loaded 10 transformed samples
+
+2️⃣  Comparing statistics...
+   Original avg length: 514 chars
+   Transformed avg length: 1067 chars
+   Change: +107.8%
+
+3️⃣  Examples...
+
+   Example 1:
+   Original (65 chars):
+     'o i wish the frog weren t becoming extinct http tinyurl com cxe w...'
+   Transformed (800 chars):
+     'Individual expresses concern regarding environmental conservation, specifically the extinction of am...'
+
+   Example 2:
+   Original (1511 chars):
+     'hi i wa wondering if anyone ha this happen to them i have have had depression for decade i have good...'
+   Transformed (1409 chars):
+     'Patient reports chronic depression with duration of approximately 15-16 years. Describes current sym...'
+
+   Example 3:
+   Original (198 chars):
+     'new ebook stress management get the inside story my new ebook about personal stress management, the ...'
+   Transformed (839 chars):
+     'Announcement of newly published educational material focusing on stress management techniques. The r...'
+
+4️⃣  Running drift detection...
+
+   🚨 DRIFT DETECTED
+   Drift Score (PSI): 8.5353
+   Features with drift: 4
+
+   Per-feature:
+     🚨 text_length: PSI=12.3241
+     🚨 word_count: PSI=10.9077
+     🚨 avg_word_length: PSI=0.0000
+     🚨 unique_words: PSI=10.9095
+
+================================================================================
+================================================================================
+🔍 ANALYZING: Adversarial Drift (Subtle)
+================================================================================
+
+1️⃣  Loading data...
+   ✓ Loaded 10 original samples
+   ✓ Loaded 10 transformed samples
+
+2️⃣  Comparing statistics...
+   Original avg length: 514 chars
+   Transformed avg length: 1544 chars
+   Change: +200.7%
+
+3️⃣  Examples...
+
+   Example 1:
+   Original (65 chars):
+     'o i wish the frog weren t becoming extinct http tinyurl com cxe w...'
+   Transformed (771 chars):
+     'oh i wish the frogs weren't becoming extinct http tinyurl com cxe w it makes me quite melancholy to ...'
+
+   Example 2:
+   Original (1511 chars):
+     'hi i wa wondering if anyone ha this happen to them i have have had depression for decade i have good...'
+   Transformed (2740 chars):
+     'hello i was curious if anyone has this occur to them i have experienced depression for decades now p...'
+
+   Example 3:
+   Original (198 chars):
+     'new ebook stress management get the inside story my new ebook about personal stress management, the ...'
+   Transformed (1279 chars):
+     'new ebook stress management discover the complete story my recent ebook regarding personal stress ma...'
+
+4️⃣  Running drift detection...
+
+   🚨 DRIFT DETECTED
+   Drift Score (PSI): 10.1027
+   Features with drift: 4
+
+   Per-feature:
+     🚨 text_length: PSI=10.5275
+     🚨 word_count: PSI=10.8355
+     🚨 avg_word_length: PSI=8.2893
+     🚨 unique_words: PSI=10.7584
+
+================================================================================
+================================================================================
+🔍 ANALYZING: Multi-Drift (Combined)
+================================================================================
+
+1️⃣  Loading data...
+   ✓ Loaded 10 original samples
+   ✓ Loaded 10 transformed samples
+
+2️⃣  Comparing statistics...
+   Original avg length: 514 chars
+   Transformed avg length: 1921 chars
+   Change: +274.0%
+
+3️⃣  Examples...
+
+   Example 1:
+   Original (65 chars):
+     'o i wish the frog weren t becoming extinct http tinyurl com cxe w...'
+   Transformed (1014 chars):
+     'omg yall i wish the frogs werent becoming extinct like deadass http tinyurl com cxe w it makes me so...'
+
+   Example 2:
+   Original (1511 chars):
+     'hi i wa wondering if anyone ha this happen to them i have have had depression for decade i have good...'
+   Transformed (2848 chars):
+     'yooo anyone else experience this??? no cap ive had depression for literal decades now like going on ...'
+
+   Example 3:
+   Original (198 chars):
+     'new ebook stress management get the inside story my new ebook about personal stress management, the ...'
+   Transformed (1428 chars):
+     'hey everyone!!! new ebook about stress management get the inside story on my brand new ebook all abo...'
+
+4️⃣  Running drift detection...
+
+   🚨 DRIFT DETECTED
+   Drift Score (PSI): 10.8717
+   Features with drift: 4
+
+   Per-feature:
+     🚨 text_length: PSI=10.4531
+     🚨 word_count: PSI=12.1698
+     🚨 avg_word_length: PSI=10.2720
+     🚨 unique_words: PSI=10.5917
+
+================================================================================
+
+================================================================================
+📊 SUMMARY: LLM-GENERATED DRIFT DETECTION
+================================================================================
+
+Length Drift (3x):
+  Status: 🚨 DETECTED
+  Score: 9.8670
+  Features: 4
+
+Slang Drift (Gen Z):
+  Status: 🚨 DETECTED
+  Score: 10.2372
+  Features: 4
+
+Formality Drift (Clinical):
+  Status: 🚨 DETECTED
+  Score: 8.5353
+  Features: 4
+
+Adversarial Drift (Subtle):
+  Status: 🚨 DETECTED
+  Score: 10.1027
+  Features: 4
+
+Multi-Drift (Combined):
+  Status: 🚨 DETECTED
+  Score: 10.8717
+  Features: 4
+
+================================================================================
