@@ -1,0 +1,39 @@
+{
+  "drift_type": "multi_drift",
+  "feature_analysis": {
+    "text_length": {
+      "psi": 0.20150037471707566,
+      "ks_statistic": 0.144,
+      "ks_pvalue": 6.125192815723937e-05,
+      "drift_detected": true,
+      "mean_change_pct": -22.538411860795218
+    },
+    "word_count": {
+      "psi": 0.16586491350515503,
+      "ks_statistic": 0.168,
+      "ks_pvalue": 1.4103236484921267e-06,
+      "drift_detected": true,
+      "mean_change_pct": -25.07107599462787
+    },
+    "avg_word_length": {
+      "psi": 0.43896455093512043,
+      "ks_statistic": 0.272,
+      "ks_pvalue": 1.1170801116402092e-16,
+      "drift_detected": true,
+      "mean_change_pct": 7.902372609480136
+    },
+    "unique_words": {
+      "psi": 0.16963788992454906,
+      "ks_statistic": 0.15,
+      "ks_pvalue": 2.521544567318862e-05,
+      "drift_detected": true,
+      "mean_change_pct": -17.16617120669782
+    }
+  },
+  "summary": {
+    "total_features": 4,
+    "detected_features": 4,
+    "avg_psi": 0.24399193227047505,
+    "max_psi": 0.43896455093512043
+  }
+}

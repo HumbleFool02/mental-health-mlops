@@ -1,0 +1,125 @@
+🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬
+    FEATURE ATTRIBUTION ANALYSIS
+🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬
+
+Goal: Determine which features detect which drift types
+
+
+================================================================================
+RUNNING TEST 1/4: Length Drift
+================================================================================
+
+================================================================================
+🎯 TEST 1: LENGTH DRIFT FEATURE ATTRIBUTION
+================================================================================
+
+================================================================================
+🔬 ANALYZING: Length Drift
+================================================================================
+
+✅ Length Drift: Changed 500 samples by 2.0x
+📊 Feature Response Analysis:
+
+  text_length         : PSI=0.3425 🔴 HIGH          Change= +100.0% [✓ DETECTED]
+  word_count          : PSI=0.3254 🔴 HIGH          Change=  +99.8% [✓ DETECTED]
+  unique_words        : PSI=0.0269 ⚪ NONE          Change=   +1.8% [✗ not detected]
+  avg_word_length     : PSI=0.0164 ⚪ NONE          Change=   -0.8% [✗ not detected]
+
+📈 Summary:
+  Total features: 4
+  Features with drift: 2
+  Average PSI: 0.1778
+  Max PSI: 0.3425
+
+================================================================================
+RUNNING TEST 2/4: Slang Drift
+================================================================================
+
+================================================================================
+🎯 TEST 2: SLANG DRIFT FEATURE ATTRIBUTION
+================================================================================
+
+================================================================================
+🔬 ANALYZING: Slang Drift
+================================================================================
+
+✅ Slang Drift: Transformed 400 samples with Gen Z slang
+📊 Feature Response Analysis:
+
+  avg_word_length     : PSI=0.0397 ⚪ NONE          Change=   -2.0% [✗ not detected]
+  word_count          : PSI=0.0071 ⚪ NONE          Change=   +7.3% [✗ not detected]
+  text_length         : PSI=0.0070 ⚪ NONE          Change=   +5.8% [✗ not detected]
+  unique_words        : PSI=0.0033 ⚪ NONE          Change=   +1.1% [✗ not detected]
+
+📈 Summary:
+  Total features: 4
+  Features with drift: 0
+  Average PSI: 0.0143
+  Max PSI: 0.0397
+
+================================================================================
+RUNNING TEST 3/4: Formality Drift
+================================================================================
+
+================================================================================
+🎯 TEST 3: FORMALITY DRIFT FEATURE ATTRIBUTION
+================================================================================
+
+================================================================================
+🔬 ANALYZING: Formality Drift
+================================================================================
+
+✅ Formality Shift: Transformed 400 to informal
+/Users/skynet/Repositories/mental-health-mlops/venv/lib/python3.13/site-packages/scipy/stats/_axis_nan_policy.py:579: RuntimeWarning: ks_2samp: Exact calculation unsuccessful. Switching to method=asymp.
+  res = hypotest_fun_out(*samples, **kwds)
+📊 Feature Response Analysis:
+
+  avg_word_length     : PSI=0.0003 ⚪ NONE          Change=   -0.1% [✗ not detected]
+  word_count          : PSI=0.0000 ⚪ NONE          Change=   +0.0% [✗ not detected]
+  text_length         : PSI=0.0000 ⚪ NONE          Change=   -0.1% [✗ not detected]
+  unique_words        : PSI=0.0000 ⚪ NONE          Change=   +0.0% [✗ not detected]
+
+📈 Summary:
+  Total features: 4
+  Features with drift: 0
+  Average PSI: 0.0001
+  Max PSI: 0.0003
+
+================================================================================
+📊 FEATURE ATTRIBUTION SUMMARY
+================================================================================
+
+📋 FEATURE SENSITIVITY BY DRIFT TYPE:
+
+Feature              | Formality Drift | Length Drift    | Multi Drift     | Slang Drift     | 
+--------------------------------------------------------------------------------------------
+avg_word_length      | ⚪ 0.000        | ⚪ 0.016        | 🔴 0.439        | ⚪ 0.040        | 
+text_length          | ⚪ 0.000        | 🔴 0.343        | 🔴 0.202        | ⚪ 0.007        | 
+unique_words         | ⚪ 0.000        | ⚪ 0.027        | 🟡 0.170        | ⚪ 0.003        | 
+word_count           | ⚪ 0.000        | 🔴 0.325        | 🟡 0.166        | ⚪ 0.007        | 
+
+💡 KEY INSIGHTS:
+
+  • Formality Drift:
+    Most sensitive: avg_word_length (PSI=0.000)
+    Also responds: 
+  • Length Drift:
+    Most sensitive: text_length (PSI=0.343)
+    Also responds: word_count (PSI=0.325), 
+  • Multi Drift:
+    Most sensitive: avg_word_length (PSI=0.439)
+    Also responds: text_length (PSI=0.202), unique_words (PSI=0.170), 
+  • Slang Drift:
+    Most sensitive: avg_word_length (PSI=0.040)
+    Also responds: 
+
+  • Robust Features (stable across drift types):
+    - unique_words: Average PSI=0.0500
+
+  • Drift Detection Strategy:
+    1. Multiple features needed - no single feature catches all drift
+    2. Structural features (length, count) detect magnitude changes
+    3. Linguistic features less sensitive to vocabulary changes
+    4. Combined monitoring provides comprehensive coverage
+
+================================================================================

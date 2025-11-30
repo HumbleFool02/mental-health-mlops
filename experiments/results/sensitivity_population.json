@@ -1,0 +1,44 @@
+{
+  "timestamp": "2025-11-30T17:12:51.174923",
+  "test": "population_sensitivity",
+  "original_anxiety_pct": 0.088,
+  "threshold_found": 0.4,
+  "results": [
+    {
+      "dominance": 0.4,
+      "drift_detected": true,
+      "js_divergence": 0.2653707121120604,
+      "wasserstein_distance": 0.984
+    },
+    {
+      "dominance": 0.5,
+      "drift_detected": true,
+      "js_divergence": 0.3329666814030398,
+      "wasserstein_distance": 1.314
+    },
+    {
+      "dominance": 0.6,
+      "drift_detected": true,
+      "js_divergence": 0.3996873406393166,
+      "wasserstein_distance": 1.6420000000000001
+    },
+    {
+      "dominance": 0.7,
+      "drift_detected": true,
+      "js_divergence": 0.46606295895036187,
+      "wasserstein_distance": 1.926
+    },
+    {
+      "dominance": 0.8,
+      "drift_detected": true,
+      "js_divergence": 0.5367815296387856,
+      "wasserstein_distance": 2.2199999999999998
+    },
+    {
+      "dominance": 0.9,
+      "drift_detected": true,
+      "js_divergence": 0.6182040463097983,
+      "wasserstein_distance": 2.5220000000000002
+    }
+  ]
+}

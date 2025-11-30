@@ -1,0 +1,118 @@
+🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬
+    DRIFT DETECTION SENSITIVITY ANALYSIS
+🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬🔬
+
+Goal: Determine detection thresholds for different drift types
+
+
+================================================================================
+RUNNING TEST 1/3: Length Drift Sensitivity
+================================================================================
+
+================================================================================
+🔬 TEST 1: LENGTH DRIFT SENSITIVITY
+================================================================================
+Question: At what length change does detector trigger?
+
+Testing 1.1x length increase... ✅ Length Drift: Changed 500 samples by 1.1x
+✅ NOT DETECTED (PSI: 0.0207)
+Testing 1.2x length increase... ✅ Length Drift: Changed 500 samples by 1.2x
+✅ NOT DETECTED (PSI: 0.0361)
+Testing 1.3x length increase... ✅ Length Drift: Changed 500 samples by 1.3x
+🚨 DETECTED (PSI: 0.0503)
+Testing 1.4x length increase... ✅ Length Drift: Changed 500 samples by 1.4x
+🚨 DETECTED (PSI: 0.0603)
+Testing 1.5x length increase... ✅ Length Drift: Changed 500 samples by 1.5x
+🚨 DETECTED (PSI: 0.0713)
+Testing 1.75x length increase... ✅ Length Drift: Changed 500 samples by 1.75x
+🚨 DETECTED (PSI: 0.1220)
+Testing 2.0x length increase... ✅ Length Drift: Changed 500 samples by 2.0x
+🚨 DETECTED (PSI: 0.1774)
+Testing 2.5x length increase... ✅ Length Drift: Changed 500 samples by 2.5x
+🚨 DETECTED (PSI: 0.2549)
+Testing 3.0x length increase... ✅ Length Drift: Changed 500 samples by 3.0x
+🚨 DETECTED (PSI: 0.4021)
+
+--------------------------------------------------------------------------------
+📊 SENSITIVITY ANALYSIS RESULTS:
+--------------------------------------------------------------------------------
+  1.1x: PSI=0.0207, Detected=False, Features=0
+  1.2x: PSI=0.0361, Detected=False, Features=0
+  1.3x: PSI=0.0503, Detected=True, Features=2
+  1.4x: PSI=0.0603, Detected=True, Features=2
+  1.5x: PSI=0.0713, Detected=True, Features=2
+  1.8x: PSI=0.1220, Detected=True, Features=2
+  2.0x: PSI=0.1774, Detected=True, Features=2
+  2.5x: PSI=0.2549, Detected=True, Features=2
+  3.0x: PSI=0.4021, Detected=True, Features=2
+
+✅ Detection Threshold: ~1.3x length change
+   (Detector triggers when text becomes 1.3x original length)
+
+================================================================================
+RUNNING TEST 2/3: Slang Drift Sensitivity
+================================================================================
+
+================================================================================
+🔬 TEST 2: SLANG DRIFT SENSITIVITY
+================================================================================
+Question: How much slang substitution triggers detection?
+
+Testing 10% slang intensity... ✅ Slang Drift: Transformed 50 samples with Gen Z slang
+/Users/skynet/Repositories/mental-health-mlops/venv/lib/python3.13/site-packages/scipy/stats/_axis_nan_policy.py:579: RuntimeWarning: ks_2samp: Exact calculation unsuccessful. Switching to method=asymp.
+  res = hypotest_fun_out(*samples, **kwds)
+✅ NOT DETECTED (PSI: 0.0002)
+Testing 20% slang intensity... ✅ Slang Drift: Transformed 100 samples with Gen Z slang
+/Users/skynet/Repositories/mental-health-mlops/venv/lib/python3.13/site-packages/scipy/stats/_axis_nan_policy.py:579: RuntimeWarning: ks_2samp: Exact calculation unsuccessful. Switching to method=asymp.
+  res = hypotest_fun_out(*samples, **kwds)
+✅ NOT DETECTED (PSI: 0.0004)
+Testing 30% slang intensity... ✅ Slang Drift: Transformed 150 samples with Gen Z slang
+✅ NOT DETECTED (PSI: 0.0012)
+Testing 40% slang intensity... ✅ Slang Drift: Transformed 200 samples with Gen Z slang
+✅ NOT DETECTED (PSI: 0.0016)
+Testing 50% slang intensity... ✅ Slang Drift: Transformed 250 samples with Gen Z slang
+✅ NOT DETECTED (PSI: 0.0016)
+Testing 60% slang intensity... ✅ Slang Drift: Transformed 300 samples with Gen Z slang
+✅ NOT DETECTED (PSI: 0.0050)
+Testing 70% slang intensity... ✅ Slang Drift: Transformed 350 samples with Gen Z slang
+✅ NOT DETECTED (PSI: 0.0064)
+Testing 80% slang intensity... ✅ Slang Drift: Transformed 400 samples with Gen Z slang
+✅ NOT DETECTED (PSI: 0.0056)
+Testing 90% slang intensity... ✅ Slang Drift: Transformed 450 samples with Gen Z slang
+✅ NOT DETECTED (PSI: 0.0082)
+Testing 100% slang intensity... ✅ Slang Drift: Transformed 500 samples with Gen Z slang
+✅ NOT DETECTED (PSI: 0.0099)
+
+--------------------------------------------------------------------------------
+📊 SLANG SENSITIVITY RESULTS:
+--------------------------------------------------------------------------------
+   10%: PSI=0.0002, Detected=False, Features=0
+   20%: PSI=0.0004, Detected=False, Features=0
+   30%: PSI=0.0012, Detected=False, Features=0
+   40%: PSI=0.0016, Detected=False, Features=0
+   50%: PSI=0.0016, Detected=False, Features=0
+   60%: PSI=0.0050, Detected=False, Features=0
+   70%: PSI=0.0064, Detected=False, Features=0
+   80%: PSI=0.0056, Detected=False, Features=0
+   90%: PSI=0.0082, Detected=False, Features=0
+  100%: PSI=0.0099, Detected=False, Features=0
+
+🤔 Interesting: Slang drift not detected at any intensity!
+   Insight: Slang changes vocabulary but not statistical features
+   This is why we need multiple drift detector types!
+
+================================================================================
+📊 SENSITIVITY ANALYSIS SUMMARY
+================================================================================
+
+🎯 Detection Thresholds:
+
+  • Length Drift: Triggers at ~1.3x length change
+  • Population Drift: Triggers at ~40% dominance
+  • Slang Sensitivity: No threshold found (detector not sensitive to this drift type)
+
+💡 Key Insights:
+  1. Different drift types have different detection sensitivities
+  2. Statistical features catch length/population changes well
+  3. Linguistic changes (slang) may need different detection methods
+  4. Multi-detector approach is essential for comprehensive monitoring   

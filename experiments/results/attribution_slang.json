@@ -1,0 +1,39 @@
+{
+  "drift_type": "slang_drift",
+  "feature_analysis": {
+    "text_length": {
+      "psi": 0.006973948808576876,
+      "ks_statistic": 0.032,
+      "ks_pvalue": 0.9603008958861495,
+      "drift_detected": false,
+      "mean_change_pct": 5.800199613895599
+    },
+    "word_count": {
+      "psi": 0.007060513369819951,
+      "ks_statistic": 0.032,
+      "ks_pvalue": 0.9603008958861495,
+      "drift_detected": false,
+      "mean_change_pct": 7.337833359496278
+    },
+    "avg_word_length": {
+      "psi": 0.039745510904694824,
+      "ks_statistic": 0.084,
+      "ks_pvalue": 0.058689209417416795,
+      "drift_detected": false,
+      "mean_change_pct": -1.9750277139367531
+    },
+    "unique_words": {
+      "psi": 0.0033180408962286047,
+      "ks_statistic": 0.02,
+      "ks_pvalue": 0.9999669534921386,
+      "drift_detected": false,
+      "mean_change_pct": 1.1163016441181888
+    }
+  },
+  "summary": {
+    "total_features": 4,
+    "detected_features": 0,
+    "avg_psi": 0.014274503494830065,
+    "max_psi": 0.039745510904694824
+  }
+}

@@ -1,0 +1,167 @@
+{
+  "timestamp": "2025-11-30T17:30:07.659234",
+  "all_results": {
+    "formality_drift": {
+      "drift_type": "formality_drift",
+      "feature_analysis": {
+        "text_length": {
+          "psi": 0.0,
+          "ks_statistic": 0.004,
+          "ks_pvalue": 1.0,
+          "drift_detected": false,
+          "mean_change_pct": -0.09566271467992486
+        },
+        "word_count": {
+          "psi": 3.563679079005351e-05,
+          "ks_statistic": 0.002,
+          "ks_pvalue": 0.9999999999999998,
+          "drift_detected": false,
+          "mean_change_pct": 0.01220937331031867
+        },
+        "avg_word_length": {
+          "psi": 0.00032017482493530675,
+          "ks_statistic": 0.01,
+          "ks_pvalue": 0.9999999999999999,
+          "drift_detected": false,
+          "mean_change_pct": -0.13654055529267634
+        },
+        "unique_words": {
+          "psi": 0.0,
+          "ks_statistic": 0.002,
+          "ks_pvalue": 0.9999999999999998,
+          "drift_detected": false,
+          "mean_change_pct": 0.0030334283807488607
+        }
+      },
+      "summary": {
+        "total_features": 4,
+        "detected_features": 0,
+        "avg_psi": 8.895290393134007e-05,
+        "max_psi": 0.00032017482493530675
+      }
+    },
+    "length_drift": {
+      "drift_type": "length_drift",
+      "feature_analysis": {
+        "text_length": {
+          "psi": 0.3425046689136856,
+          "ks_statistic": 0.204,
+          "ks_pvalue": 1.6207194560893726e-09,
+          "drift_detected": true,
+          "mean_change_pct": 100.0
+        },
+        "word_count": {
+          "psi": 0.32536627688318975,
+          "ks_statistic": 0.208,
+          "ks_pvalue": 7.031163124192981e-10,
+          "drift_detected": true,
+          "mean_change_pct": 99.82732457746847
+        },
+        "avg_word_length": {
+          "psi": 0.01638538684535676,
+          "ks_statistic": 0.026,
+          "ks_pvalue": 0.9959527565364388,
+          "drift_detected": false,
+          "mean_change_pct": -0.8135008053420921
+        },
+        "unique_words": {
+          "psi": 0.026931465290691056,
+          "ks_statistic": 0.048,
+          "ks_pvalue": 0.6126241113875229,
+          "drift_detected": false,
+          "mean_change_pct": 1.8109567433112945
+        }
+      },
+      "summary": {
+        "total_features": 4,
+        "detected_features": 2,
+        "avg_psi": 0.17779694948323077,
+        "max_psi": 0.3425046689136856
+      }
+    },
+    "multi_drift": {
+      "drift_type": "multi_drift",
+      "feature_analysis": {
+        "text_length": {
+          "psi": 0.20150037471707566,
+          "ks_statistic": 0.144,
+          "ks_pvalue": 6.125192815723937e-05,
+          "drift_detected": true,
+          "mean_change_pct": -22.538411860795218
+        },
+        "word_count": {
+          "psi": 0.16586491350515503,
+          "ks_statistic": 0.168,
+          "ks_pvalue": 1.4103236484921267e-06,
+          "drift_detected": true,
+          "mean_change_pct": -25.07107599462787
+        },
+        "avg_word_length": {
+          "psi": 0.43896455093512043,
+          "ks_statistic": 0.272,
+          "ks_pvalue": 1.1170801116402092e-16,
+          "drift_detected": true,
+          "mean_change_pct": 7.902372609480136
+        },
+        "unique_words": {
+          "psi": 0.16963788992454906,
+          "ks_statistic": 0.15,
+          "ks_pvalue": 2.521544567318862e-05,
+          "drift_detected": true,
+          "mean_change_pct": -17.16617120669782
+        }
+      },
+      "summary": {
+        "total_features": 4,
+        "detected_features": 4,
+        "avg_psi": 0.24399193227047505,
+        "max_psi": 0.43896455093512043
+      }
+    },
+    "slang_drift": {
+      "drift_type": "slang_drift",
+      "feature_analysis": {
+        "text_length": {
+          "psi": 0.006973948808576876,
+          "ks_statistic": 0.032,
+          "ks_pvalue": 0.9603008958861495,
+          "drift_detected": false,
+          "mean_change_pct": 5.800199613895599
+        },
+        "word_count": {
+          "psi": 0.007060513369819951,
+          "ks_statistic": 0.032,
+          "ks_pvalue": 0.9603008958861495,
+          "drift_detected": false,
+          "mean_change_pct": 7.337833359496278
+        },
+        "avg_word_length": {
+          "psi": 0.039745510904694824,
+          "ks_statistic": 0.084,
+          "ks_pvalue": 0.058689209417416795,
+          "drift_detected": false,
+          "mean_change_pct": -1.9750277139367531
+        },
+        "unique_words": {
+          "psi": 0.0033180408962286047,
+          "ks_statistic": 0.02,
+          "ks_pvalue": 0.9999669534921386,
+          "drift_detected": false,
+          "mean_change_pct": 1.1163016441181888
+        }
+      },
+      "summary": {
+        "total_features": 4,
+        "detected_features": 0,
+        "avg_psi": 0.014274503494830065,
+        "max_psi": 0.039745510904694824
+      }
+    }
+  },
+  "features_analyzed": [
+    "avg_word_length",
+    "text_length",
+    "unique_words",
+    "word_count"
+  ]
+}
