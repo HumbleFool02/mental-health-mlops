@@ -12,9 +12,10 @@ from datetime import datetime
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from model_loader import ModelLoader
-from predictor import MentalHealthPredictor
-from schemas import (
+
+from src.api.model_loader import ModelLoader
+from src.api.predictor import MentalHealthPredictor
+from src.api.schemas import (
     BatchPredictionRequest,
     DriftStatusResponse,
     HealthResponse,
