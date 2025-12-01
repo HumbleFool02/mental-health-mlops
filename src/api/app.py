@@ -3,6 +3,8 @@ FastAPI application for Mental Health Classification
 """
 
 import logging
+import os
+import sys
 import time
 from contextlib import asynccontextmanager
 from datetime import datetime
@@ -10,10 +12,9 @@ from datetime import datetime
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-
-from src.api.model_loader import ModelLoader
-from src.api.predictor import MentalHealthPredictor
-from src.api.schemas import (
+from model_loader import ModelLoader
+from predictor import MentalHealthPredictor
+from schemas import (
     BatchPredictionRequest,
     DriftStatusResponse,
     HealthResponse,
@@ -21,6 +22,8 @@ from src.api.schemas import (
     PredictionRequest,
     PredictionResponse,
 )
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 # Configure logging
 logging.basicConfig(
