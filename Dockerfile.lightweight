@@ -32,7 +32,9 @@ ENV AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
     AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
     AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
 
-RUN aws s3 sync s3://mental-health-mlops-models/distilbert_exp2/ ./models/distilbert_exp2/
+RUN aws s3 sync s3://mental-health-mlops-models/distilbert_exp2/ ./models/distilbert_exp2/ && \
+    mkdir -p ./data/processed && \
+    aws s3 cp s3://mental-health-mlops-models/data/reference_data.csv ./data/processed/reference_data.csv
 
 # Unset credentials so they are absent from the running container's environment
 ENV AWS_ACCESS_KEY_ID="" \
@@ -42,7 +44,6 @@ ENV AWS_ACCESS_KEY_ID="" \
 # Application code (after model download — changes here won't bust the S3 layer)
 # ---------------------------------------------------------------------------
 COPY src/ ./src/
-COPY data/processed/ ./data/processed/
 
 # src/api uses bare module imports (model_loader, predictor, schemas).
 # Adding src/api to PYTHONPATH lets Python resolve them when the app is

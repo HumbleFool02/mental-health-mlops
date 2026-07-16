@@ -16,19 +16,53 @@ from src.monitoring.data_drift import DataDriftDetector
 # Add project root to path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+_TEMPLATES = [
+    "I feel very {} today and cannot stop thinking about it",
+    "My {} has been getting worse and I don't know what to do",
+    "Today was {} and I struggled to get out of bed",
+    "I've been feeling {} for weeks now and it's affecting my work",
+    "Sometimes I feel so {} that I can't concentrate on anything",
+]
+_LABELS = ["Normal", "Depression", "Suicidal", "Anxiety", "Stress", "Bipolar"]
+_WORDS = [
+    "sad",
+    "hopeless",
+    "anxious",
+    "stressed",
+    "empty",
+    "tired",
+    "happy",
+    "okay",
+    "nervous",
+    "overwhelmed",
+    "lost",
+    "confused",
+]
+
+
+@pytest.fixture
+def reference_data():
+    """200 synthetic samples cycling through 5 templates × 12 words"""
+    texts = [_TEMPLATES[i % 5].format(_WORDS[i % 12]) for i in range(200)]
+    labels = [_LABELS[i % 6] for i in range(200)]
+    return pd.DataFrame({"text": texts, "label": labels})
+
+
+@pytest.fixture
+def validation_data():
+    """100 synthetic samples from same template pool (same text-stat distribution)"""
+    texts = [_TEMPLATES[i % 5].format(_WORDS[i % 12]) for i in range(100)]
+    labels = [_LABELS[i % 6] for i in range(100)]
+    return pd.DataFrame({"text": texts, "label": labels})
+
+
+@pytest.fixture
+def reference_performance():
+    return {"accuracy": 0.7937, "f1_macro": 0.8189, "f1_weighted": 0.8200}
+
 
 class TestDataDriftDetector:
     """Test Data Drift Detection"""
-
-    @pytest.fixture
-    def reference_data(self):
-        """Load reference data"""
-        return pd.read_csv("data/processed/reference_data.csv")
-
-    @pytest.fixture
-    def validation_data(self):
-        """Load validation data"""
-        return pd.read_csv("data/processed/val.csv")
 
     def test_no_drift_on_same_distribution(self, reference_data, validation_data):
         """Test that no drift is detected on validation data"""
@@ -68,16 +102,6 @@ class TestDataDriftDetector:
 
 class TestConceptDriftDetector:
     """Test Concept Drift Detection"""
-
-    @pytest.fixture
-    def validation_data(self):
-        """Load validation data"""
-        return pd.read_csv("data/processed/val.csv")
-
-    @pytest.fixture
-    def reference_performance(self):
-        """Reference performance from DistilBERT Exp 2"""
-        return {"accuracy": 0.7937, "f1_macro": 0.8189, "f1_weighted": 0.8200}
 
     def test_no_drift_on_good_performance(self, validation_data, reference_performance):
         """Test no drift when performance is maintained"""
@@ -137,11 +161,6 @@ class TestConceptDriftDetector:
 class TestPredictionDriftDetector:
     """Test Prediction Drift Detection"""
 
-    @pytest.fixture
-    def validation_data(self):
-        """Load validation data"""
-        return pd.read_csv("data/processed/val.csv")
-
     def test_no_drift_on_same_predictions(self, validation_data):
         """Test no drift when predictions are from same distribution"""
         # Prepare labels
@@ -152,12 +171,12 @@ class TestPredictionDriftDetector:
         from src.monitoring.prediction_drift import PredictionDriftDetector
 
         detector = PredictionDriftDetector(
-            y_true[:3000],  # First half as reference
+            y_true[:50],  # First half as reference
             class_names=label_encoder.classes_,
             threshold=0.1,
         )
 
-        results = detector.detect_drift(y_true[3000:])  # Second half as current
+        results = detector.detect_drift(y_true[50:])  # Second half as current
 
         # Should not detect drift (same distribution)
         assert (
@@ -193,31 +212,40 @@ class TestPredictionDriftDetector:
 
 
 if __name__ == "__main__":
-    # Run tests manually
+    # Run tests manually using the same synthetic data as the pytest fixtures
     print("Running Drift Detection Tests...\n")
+
+    _ref_df = pd.DataFrame(
+        {
+            "text": [_TEMPLATES[i % 5].format(_WORDS[i % 12]) for i in range(200)],
+            "label": [_LABELS[i % 6] for i in range(200)],
+        }
+    )
+    _val_df = pd.DataFrame(
+        {
+            "text": [_TEMPLATES[i % 5].format(_WORDS[i % 12]) for i in range(100)],
+            "label": [_LABELS[i % 6] for i in range(100)],
+        }
+    )
+    _ref_perf = {"accuracy": 0.7937, "f1_macro": 0.8189, "f1_weighted": 0.8200}
 
     # Test Data Drift
     print("=" * 70)
     print("DATA DRIFT TESTS")
     print("=" * 70)
 
-    ref_data = pd.read_csv("data/processed/reference_data.csv")
-    val_data = pd.read_csv("data/processed/val.csv")
-
     test_data_drift = TestDataDriftDetector()
-    test_data_drift.test_no_drift_on_same_distribution(ref_data, val_data)
-    test_data_drift.test_drift_on_modified_data(ref_data)
+    test_data_drift.test_no_drift_on_same_distribution(_ref_df, _val_df)
+    test_data_drift.test_drift_on_modified_data(_ref_df)
 
     # Test Concept Drift
     print("\n" + "=" * 70)
     print("CONCEPT DRIFT TESTS")
     print("=" * 70)
 
-    ref_perf = {"accuracy": 0.7937, "f1_macro": 0.8189, "f1_weighted": 0.8200}
-
     test_concept_drift = TestConceptDriftDetector()
-    test_concept_drift.test_no_drift_on_good_performance(val_data, ref_perf)
-    test_concept_drift.test_drift_on_degraded_performance(val_data, ref_perf)
+    test_concept_drift.test_no_drift_on_good_performance(_val_df, _ref_perf)
+    test_concept_drift.test_drift_on_degraded_performance(_val_df, _ref_perf)
 
     # Test Prediction Drift
     print("\n" + "=" * 70)
@@ -225,5 +253,5 @@ if __name__ == "__main__":
     print("=" * 70)
 
     test_pred_drift = TestPredictionDriftDetector()
-    test_pred_drift.test_no_drift_on_same_predictions(val_data)
-    test_pred_drift.test_drift_on_shifted_predictions(val_data)
+    test_pred_drift.test_no_drift_on_same_predictions(_val_df)
+    test_pred_drift.test_drift_on_shifted_predictions(_val_df)

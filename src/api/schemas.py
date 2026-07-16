@@ -4,7 +4,7 @@ Pydantic schemas for API request/response validation
 
 from typing import Dict
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class PredictionRequest(BaseModel):
@@ -14,14 +14,18 @@ class PredictionRequest(BaseModel):
         ..., min_length=1, max_length=10000, description="Text to classify"
     )
 
-    @validator("text")
+    @field_validator("text")
+    @classmethod
     def text_must_not_be_empty(cls, v):
         if not v.strip():
             raise ValueError("Text cannot be empty or only whitespace")
         return v.strip()
 
-    class Config:
-        schema_extra = {"example": {"text": "I feel anxious and can't sleep at night"}}
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {"text": "I feel anxious and can't sleep at night"}
+        }
+    )
 
 
 class PredictionResponse(BaseModel):
@@ -36,8 +40,8 @@ class PredictionResponse(BaseModel):
     timestamp: str = Field(..., description="Prediction timestamp")
     drift_detected: bool = Field(..., description="Whether drift was detected")
 
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "prediction": "Anxiety",
                 "confidence": 0.87,
@@ -54,17 +58,18 @@ class PredictionResponse(BaseModel):
                 "drift_detected": False,
             }
         }
+    )
 
 
 class BatchPredictionRequest(BaseModel):
     """Request model for batch predictions"""
 
     texts: list[str] = Field(
-        ..., min_items=1, max_items=100, description="List of texts to classify"
+        ..., min_length=1, max_length=100, description="List of texts to classify"
     )
 
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "texts": [
                     "I feel anxious",
@@ -73,6 +78,7 @@ class BatchPredictionRequest(BaseModel):
                 ]
             }
         }
+    )
 
 
 class HealthResponse(BaseModel):
@@ -83,8 +89,8 @@ class HealthResponse(BaseModel):
     model_version: str
     uptime_seconds: float
 
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "status": "healthy",
                 "model_loaded": True,
@@ -92,6 +98,7 @@ class HealthResponse(BaseModel):
                 "uptime_seconds": 3600.5,
             }
         }
+    )
 
 
 class ModelInfoResponse(BaseModel):
@@ -106,8 +113,8 @@ class ModelInfoResponse(BaseModel):
     num_classes: int
     classes: list[str]
 
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "model_name": "DistilBERT",
                 "model_version": "distilbert_exp2",
@@ -126,6 +133,7 @@ class ModelInfoResponse(BaseModel):
                 ],
             }
         }
+    )
 
 
 class DriftStatusResponse(BaseModel):
@@ -138,8 +146,8 @@ class DriftStatusResponse(BaseModel):
     last_check: str
     predictions_since_check: int
 
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "data_drift_detected": False,
                 "concept_drift_detected": False,
@@ -149,3 +157,4 @@ class DriftStatusResponse(BaseModel):
                 "predictions_since_check": 150,
             }
         }
+    )
