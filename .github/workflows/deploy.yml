@@ -34,6 +34,7 @@ jobs:
           # Forward the AWS credentials set above into the remote shell so the
           # docker build --build-arg lines below can reference them.
           envs: AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY
+          command_timeout: 30m
           script: |
             set -e
             cd /home/ubuntu/mental-health-mlops
