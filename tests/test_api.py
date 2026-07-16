@@ -1,139 +1,143 @@
 """
-API endpoint tests
+API endpoint tests using FastAPI TestClient with a mocked model.
+
+The real DistilBERT model (268 MB) is not available in CI. We inject mock
+implementations of model_loader and predictor into sys.modules before
+importing app so that the lifespan startup succeeds without touching disk or
+GPU, and every endpoint can be exercised without an external process.
 """
 
 import os
 import sys
+from unittest.mock import MagicMock
 
 import pytest
 from fastapi.testclient import TestClient
 
-# Add project root to path
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+# src/api uses bare module names (model_loader, predictor, schemas) because it
+# is designed to be run from within that directory.  Add it to sys.path before
+# any import of src.api.app.
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src", "api"))
+
+CLASSES = ["Anxiety", "Bipolar", "Depression", "Normal", "Stress", "Suicidal"]
+_PROBS = {c: round(1 / len(CLASSES), 4) for c in CLASSES}
 
 
-# We need to import and use the app AFTER the model is loaded
-# For testing, we'll use a simpler approach: test against running server
+def _make_loader_mock() -> MagicMock:
+    m = MagicMock()
+    m.get_classes.return_value = CLASSES
+    return m
 
-import requests
 
-API_BASE_URL = "http://localhost:8000"
+def _make_predictor_mock() -> MagicMock:
+    m = MagicMock()
+    m.predict.return_value = {
+        "prediction": "Anxiety",
+        "confidence": 0.87,
+        "probabilities": _PROBS,
+        "class_index": 0,
+    }
+    m.predict_batch.return_value = [
+        {"prediction": c, "confidence": 0.80, "probabilities": _PROBS}
+        for c in ["Anxiety", "Normal", "Depression"]
+    ]
+    m.get_prediction_history.return_value = []
+    m.get_prediction_distribution.return_value = {c: 0 for c in CLASSES}
+    return m
+
+
+# Inject mocks into sys.modules before app.py is imported so that
+# `from model_loader import ModelLoader` and friends resolve to our fakes.
+_loader_inst = _make_loader_mock()
+_predictor_inst = _make_predictor_mock()
+
+_ml_mod = MagicMock()
+_ml_mod.ModelLoader.return_value = _loader_inst
+sys.modules.setdefault("model_loader", _ml_mod)
+
+_pred_mod = MagicMock()
+_pred_mod.MentalHealthPredictor.return_value = _predictor_inst
+sys.modules.setdefault("predictor", _pred_mod)
+
+from src.api.app import app  # noqa: E402  (must follow sys.modules injection)
+
+
+@pytest.fixture(scope="module")
+def client():
+    """TestClient that exercises the full lifespan (startup → tests → shutdown)."""
+    with TestClient(app) as c:
+        yield c
 
 
 class TestAPIEndpoints:
-    """Test API endpoints against running server"""
-
-    def test_root(self):
-        """Test root endpoint"""
-        response = requests.get(f"{API_BASE_URL}/")
-        assert response.status_code == 200
-        data = response.json()
+    def test_root(self, client):
+        resp = client.get("/")
+        assert resp.status_code == 200
+        data = resp.json()
         assert "message" in data
         assert "endpoints" in data
-        print("✅ Root endpoint works")
 
-    def test_health(self):
-        """Test health endpoint"""
-        response = requests.get(f"{API_BASE_URL}/health")
-        assert response.status_code == 200
-        data = response.json()
+    def test_health(self, client):
+        resp = client.get("/health")
+        assert resp.status_code == 200
+        data = resp.json()
         assert data["status"] == "healthy"
-        assert data["model_loaded"] == True
-        print(f"✅ Health check: {data['status']}")
+        assert data["model_loaded"] is True
+        assert "uptime_seconds" in data
 
-    def test_model_info(self):
-        """Test model info endpoint"""
-        response = requests.get(f"{API_BASE_URL}/model-info")
-        assert response.status_code == 200
-        data = response.json()
+    def test_model_info(self, client):
+        resp = client.get("/model-info")
+        assert resp.status_code == 200
+        data = resp.json()
         assert data["model_name"] == "DistilBERT"
         assert data["f1_macro"] == 0.8189
         assert data["num_classes"] == 6
-        print(f"✅ Model info: {data['model_name']} (F1: {data['f1_macro']})")
+        assert len(data["classes"]) == 6
+        assert set(data["classes"]) == set(CLASSES)
 
-    def test_predict_anxiety(self):
-        """Test prediction for anxiety text"""
-        response = requests.post(
-            f"{API_BASE_URL}/predict",
-            json={"text": "I feel anxious and can't sleep at night"},
-        )
-        assert response.status_code == 200
-        data = response.json()
+    def test_predict_returns_valid_structure(self, client):
+        resp = client.post("/predict", json={"text": "I feel anxious and can't sleep"})
+        assert resp.status_code == 200
+        data = resp.json()
         assert "prediction" in data
         assert "confidence" in data
         assert "probabilities" in data
-        assert data["confidence"] > 0.5
-        print(f"✅ Anxiety prediction: {data['prediction']} ({data['confidence']:.2%})")
+        assert "drift_detected" in data
+        assert data["prediction"] in CLASSES
+        assert 0.0 <= data["confidence"] <= 1.0
+        assert set(data["probabilities"].keys()) == set(CLASSES)
 
-    def test_predict_normal(self):
-        """Test prediction for normal text"""
-        response = requests.post(
-            f"{API_BASE_URL}/predict",
-            json={"text": "Everything is going well and I'm feeling great"},
-        )
-        assert response.status_code == 200
-        data = response.json()
-        assert data["prediction"] in [
-            "Normal",
-            "Anxiety",
-            "Depression",
-            "Suicidal",
-            "Bipolar",
-            "Stress",
-        ]
-        print(f"✅ Normal prediction: {data['prediction']} ({data['confidence']:.2%})")
+    def test_predict_empty_text_returns_422(self, client):
+        resp = client.post("/predict", json={"text": ""})
+        assert resp.status_code == 422
 
-    def test_predict_depression(self):
-        """Test prediction for depression text"""
-        response = requests.post(
-            f"{API_BASE_URL}/predict",
-            json={"text": "I feel hopeless and sad all the time"},
-        )
-        assert response.status_code == 200
-        data = response.json()
-        assert "prediction" in data
-        print(
-            f"✅ Depression prediction: {data['prediction']} ({data['confidence']:.2%})"
-        )
+    def test_predict_whitespace_only_returns_422(self, client):
+        resp = client.post("/predict", json={"text": "   "})
+        assert resp.status_code == 422
 
-    def test_predict_empty_text(self):
-        """Test prediction with empty text"""
-        response = requests.post(f"{API_BASE_URL}/predict", json={"text": ""})
-        assert response.status_code == 422  # Validation error
-        print("✅ Empty text validation works")
-
-    def test_batch_predict(self):
-        """Test batch prediction"""
-        response = requests.post(
-            f"{API_BASE_URL}/predict_batch",
-            json={"texts": ["I feel anxious", "Everything is great", "I feel sad"]},
-        )
-        assert response.status_code == 200
-        data = response.json()
+    def test_batch_predict(self, client):
+        texts = ["I feel anxious", "Everything is great", "I feel hopeless"]
+        resp = client.post("/predict_batch", json={"texts": texts})
+        assert resp.status_code == 200
+        data = resp.json()
         assert "predictions" in data
-        assert len(data["predictions"]) == 3
-        print(f"✅ Batch prediction: {len(data['predictions'])} results")
+        assert len(data["predictions"]) == len(texts)
+        for pred in data["predictions"]:
+            assert "prediction" in pred
+            assert "confidence" in pred
 
-    def test_drift_status(self):
-        """Test drift status endpoint"""
-        response = requests.get(f"{API_BASE_URL}/drift-status")
-        assert response.status_code == 200
-        data = response.json()
+    def test_drift_status(self, client):
+        resp = client.get("/drift-status")
+        assert resp.status_code == 200
+        data = resp.json()
         assert "drift_score" in data
         assert "predictions_since_check" in data
-        print(
-            f"✅ Drift status: Score={data['drift_score']:.4f}, Predictions={data['predictions_since_check']}"
-        )
+        assert isinstance(data["drift_score"], float)
+        assert isinstance(data["predictions_since_check"], int)
 
-    def test_prediction_distribution(self):
-        """Test prediction distribution endpoint"""
-        response = requests.get(f"{API_BASE_URL}/prediction-distribution")
-        assert response.status_code == 200
-        data = response.json()
+    def test_prediction_distribution(self, client):
+        resp = client.get("/prediction-distribution")
+        assert resp.status_code == 200
+        data = resp.json()
         assert "distribution" in data
         assert "total_predictions" in data
-        print(f"✅ Distribution: {data['total_predictions']} total predictions")
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v", "-s"])

@@ -2,28 +2,28 @@
 Utility functions for the MLOps pipeline
 """
 
-import yaml
-import os
 import random
+from pathlib import Path
+from typing import Any, Dict
+
 import numpy as np
 import torch
+import yaml
 from loguru import logger
-from pathlib import Path
-from typing import Dict, Any
 
 
 def load_config(config_path: str = "configs/config.yaml") -> Dict[str, Any]:
     """
     Load configuration from YAML file
-    
+
     Args:
         config_path: Path to configuration file
-        
+
     Returns:
         Dictionary containing configuration
     """
     try:
-        with open(config_path, 'r') as f:
+        with open(config_path, "r") as f:
             config = yaml.safe_load(f)
         logger.info(f"Configuration loaded from {config_path}")
         return config
@@ -35,7 +35,7 @@ def load_config(config_path: str = "configs/config.yaml") -> Dict[str, Any]:
 def set_seed(seed: int = 42):
     """
     Set random seed for reproducibility
-    
+
     Args:
         seed: Random seed value
     """
@@ -50,7 +50,7 @@ def set_seed(seed: int = 42):
 def create_directories(directories: list):
     """
     Create directories if they don't exist
-    
+
     Args:
         directories: List of directory paths to create
     """
@@ -62,7 +62,7 @@ def create_directories(directories: list):
 def get_project_root() -> Path:
     """
     Get the project root directory
-    
+
     Returns:
         Path object pointing to project root
     """
@@ -72,19 +72,19 @@ def get_project_root() -> Path:
 def setup_logging(log_file: str = "logs/app.log"):
     """
     Setup logging configuration
-    
+
     Args:
         log_file: Path to log file
     """
     log_path = Path(log_file)
     log_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     logger.add(
         log_file,
         rotation="500 MB",
         retention="10 days",
         level="INFO",
-        format="{time:YYYY-MM-DD HH:mm:ss} | {level} | {message}"
+        format="{time:YYYY-MM-DD HH:mm:ss} | {level} | {message}",
     )
     logger.info("Logging configured")
 
@@ -92,11 +92,11 @@ def setup_logging(log_file: str = "logs/app.log"):
 def save_config(config: Dict[str, Any], output_path: str):
     """
     Save configuration to YAML file
-    
+
     Args:
         config: Configuration dictionary
         output_path: Path to save configuration
     """
-    with open(output_path, 'w') as f:
+    with open(output_path, "w") as f:
         yaml.dump(config, f, default_flow_style=False)
     logger.info(f"Configuration saved to {output_path}")

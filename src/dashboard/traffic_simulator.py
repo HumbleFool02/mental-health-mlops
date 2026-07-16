@@ -3,20 +3,19 @@ Traffic Simulator
 
 Simulates production traffic with gradual drift introduction
 """
+
 import os
 import random
 import sys
 import time
-from datetime import datetime, timedelta
 
-import numpy as np
 import pandas as pd
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
-from src.dashboard.drift_database import DriftDatabase
-from src.monitoring.data_drift import DataDriftDetector
-from src.monitoring.drift_simulator_v2 import EnhancedDriftSimulator
-from src.monitoring.prediction_drift import PredictionDriftDetector
+from src.dashboard.drift_database import DriftDatabase  # noqa: E402
+from src.monitoring.data_drift import DataDriftDetector  # noqa: E402
+from src.monitoring.drift_simulator_v2 import EnhancedDriftSimulator  # noqa: E402
+from src.monitoring.prediction_drift import PredictionDriftDetector  # noqa: E402
 
 
 class TrafficSimulator:
@@ -170,14 +169,14 @@ class TrafficSimulator:
 
         # Show summary
         stats = self.db.get_drift_stats()
-        print(f"\n📊 Summary:")
+        print("\n📊 Summary:")
         print(f"   Total drift checks: {stats['total_checks']}")
         print(f"   Drift detected: {stats['drift_detected_count']} times")
-        print(f"   Drift rate: {stats['drift_rate']*100:.1f}%")
+        print(f"   Drift rate: {stats['drift_rate'] * 100:.1f}%")
         print(f"   Average drift score: {stats['avg_drift_score']:.4f}")
 
         recent_alerts = self.db.get_recent_alerts(limit=5)
-        print(f"\n🔔 Recent Alerts:")
+        print("\n🔔 Recent Alerts:")
         for alert in recent_alerts:
             severity_icon = {"critical": "🚨", "warning": "⚠️", "info": "ℹ️"}.get(
                 alert["severity"], "•"

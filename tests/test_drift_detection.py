@@ -2,7 +2,6 @@
 Unit tests for drift detection modules
 """
 
-
 import os
 import sys
 
@@ -37,9 +36,9 @@ class TestDataDriftDetector:
         results = detector.detect_drift(validation_data)
 
         # Should not detect overall drift
-        assert (
-            results["overall_drift"] == False
-        ), "Should not detect drift on same distribution"
+        assert not results[
+            "overall_drift"
+        ], "Should not detect drift on same distribution"
 
         # Drift score should be low
         assert (
@@ -61,7 +60,7 @@ class TestDataDriftDetector:
         results = detector.detect_drift(modified_data)
 
         # Should detect drift
-        assert results["overall_drift"] == True, "Should detect drift on modified data"
+        assert results["overall_drift"], "Should detect drift on modified data"
 
         print("\n Test passed: Drift detected on modified data")
         print(detector.generate_report(results))
@@ -128,9 +127,7 @@ class TestConceptDriftDetector:
         )
 
         # Should detect drift with degraded performance
-        assert (
-            results["overall_drift"] == True
-        ), "Should detect drift with 30% error rate"
+        assert results["overall_drift"], "Should detect drift with 30% error rate"
         assert len(results["degraded_metrics"]) > 0, "Should have degraded metrics"
 
         print("\n Test passed: Drift detected on degraded performance")
@@ -188,9 +185,7 @@ class TestPredictionDriftDetector:
         results = detector.detect_drift(shifted_predictions)
 
         # Should detect drift
-        assert (
-            results["drift_detected"] == True
-        ), "Should detect drift on shifted distribution"
+        assert results["drift_detected"], "Should detect drift on shifted distribution"
         assert results["js_divergence"] > 0.1, "JS divergence should exceed threshold"
 
         print("\n Test passed: Drift detected on shifted predictions")
