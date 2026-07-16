@@ -4,12 +4,15 @@ name: Deploy to EC2
 # version to the production instance.
 #
 # Required GitHub secrets (Settings → Secrets → Actions):
-#   EC2_HOST       — Elastic IP of the EC2 instance (e.g. 1.2.3.4)
-#   EC2_SSH_KEY    — PEM private key for SSH access (the full file content)
+#   EC2_HOST               — Elastic IP of the EC2 instance
+#   EC2_USER               — SSH username (e.g. ubuntu)
+#   EC2_SSH_KEY            — PEM private key for SSH access (full file content)
+#   AWS_ACCESS_KEY_ID      — IAM key with read access to mental-health-mlops-models
+#   AWS_SECRET_ACCESS_KEY  — corresponding secret
 #
-# The instance must have Docker installed and the repo already cloned at
-# /home/ubuntu/mental-health-mlops (with models/ populated — not in git).
-# This workflow pulls the latest code and rebuilds the container in-place.
+# The instance must have Docker installed and the repo cloned at
+# ~/mental-health-mlops.  The model is downloaded from S3 during docker build,
+# so no model files need to be present on the instance beforehand.
 
 on:
   workflow_dispatch:
@@ -21,10 +24,16 @@ jobs:
     steps:
       - name: SSH into EC2 and deploy
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
+          username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
+          # Forward the AWS credentials set above into the remote shell so the
+          # docker build --build-arg lines below can reference them.
+          envs: AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY
           script: |
             set -e
             cd /home/ubuntu/mental-health-mlops
@@ -32,18 +41,22 @@ jobs:
             echo "--- pulling latest code ---"
             git pull origin main
 
-            echo "--- building image ---"
-            docker build -t mental-health-api -f Dockerfile.lightweight .
+            echo "--- building image (downloads model from S3) ---"
+            docker build -f Dockerfile.lightweight \
+              --build-arg AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+              --build-arg AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+              --build-arg AWS_DEFAULT_REGION=us-east-1 \
+              -t mental-health-mlops:latest .
 
             echo "--- swapping container ---"
-            docker stop mental-health-api 2>/dev/null || true
-            docker rm   mental-health-api 2>/dev/null || true
+            docker stop mlops-app 2>/dev/null || true
+            docker rm   mlops-app 2>/dev/null || true
             docker run -d \
-              --name mental-health-api \
+              --name mlops-app \
               --restart unless-stopped \
               -p 8000:8000 \
               -p 8501:8501 \
-              mental-health-api
+              mental-health-mlops:latest
 
             echo "--- pruning old images ---"
             docker image prune -f
