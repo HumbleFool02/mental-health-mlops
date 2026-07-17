@@ -1,356 +1,135 @@
-# 🏥 Mental Health Text Classification - Production MLOps Pipeline
+# Mental Health Text Classification — Production MLOps Pipeline
 
+[![Tests](https://github.com/HumbleFool02/mental-health-mlops/actions/workflows/test.yml/badge.svg)](https://github.com/HumbleFool02/mental-health-mlops/actions/workflows/test.yml)
+[![Docker](https://github.com/HumbleFool02/mental-health-mlops/actions/workflows/docker-build.yml/badge.svg)](https://github.com/HumbleFool02/mental-health-mlops/actions/workflows/docker-build.yml)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Docker](https://img.shields.io/badge/docker-ready-brightgreen.svg)](https://www.docker.com/)
-[![AWS](https://img.shields.io/badge/AWS-deployed-orange.svg)](https://aws.amazon.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> End-to-end MLOps pipeline for mental health text classification with comprehensive drift detection and real-time monitoring.
+End-to-end MLOps pipeline for mental health text classification with production drift detection and real-time monitoring. Fine-tunes DistilBERT on 51,842 samples across six categories, deploys via FastAPI on AWS EC2, and monitors for data, concept, and prediction drift in real time.
 
-**🌐 Live Demo:** http://98.93.153.242:8000
-**📊 Monitoring Dashboard:** http://98.93.153.242:8501
+**Live Demo:** http://18.221.115.135:8000
+**Monitoring Dashboard:** http://18.221.115.135:8501
+**API Docs:** http://18.221.115.135:8000/docs
 
 ---
 
-## 🎯 Project Overview
+## Performance
 
-This project implements a **production-ready MLOps pipeline** for classifying mental health text into six categories (Normal, Depression, Suicidal, Anxiety, Bipolar, Stress). The system emphasizes **drift detection and monitoring** to ensure reliable long-term performance in production environments.
+| Metric | Value |
+|--------|-------|
+| Overall F1 Score | 0.819 (+8.2% over baseline) |
+| Suicidal Class Recall | 74.1% |
+| Weighted Precision | 0.832 |
+| Inference Latency | 98ms |
 
-### Key Features
-
-- 🤖 **High-Performance Model:** 81.9% F1 score using DistilBERT transformer
-- 🎯 **Critical Case Detection:** 74.1% recall on suicidal cases (minimizing false negatives)
-- 📊 **Multi-Faceted Drift Detection:** Data drift (PSI, KS), Concept drift (performance), Prediction drift (JS divergence)
-- 🔍 **Comprehensive Validation:** Sensitivity analysis, feature attribution, false positive testing
-- 🚀 **Production API:** FastAPI with <100ms latency
-- 📈 **Real-Time Dashboard:** Live drift monitoring with Streamlit
-- 🐳 **Containerized:** Docker-based deployment
-- ☁️ **Cloud Deployed:** Running on AWS EC2
-- ✅ **CI/CD Pipeline:** Automated testing with GitHub Actions
+Baseline comparison: LightGBM achieved 0.771 F1 — DistilBERT chosen for its deployability (40% smaller, 60% faster than BERT, ~97% performance retained) given memory-constrained EC2 deployment.
 
 ---
 
-## 📊 Performance Metrics
+## Drift Detection
 
-### Classification Performance
+Three-layer monitoring stack, implemented from scratch:
 
-| Metric | Value | Improvement vs Baseline |
-|--------|-------|------------------------|
-| **Overall F1 Score** | 0.819 | +8.2% |
-| **Suicidal Recall** | 74.1% | +2.8% |
-| **Precision** | 0.832 | +7.5% |
-| **Inference Time** | <100ms | - |
+**Data Drift** — Population Stability Index (PSI) and Kolmogorov-Smirnov test across four text features (length, word count, avg word length, unique words). Triggers if PSI > 0.1 on two or more features.
 
-### Drift Detection Validation
+**Concept Drift** — Tracks F1, precision, and recall over time. Alerts if any metric degrades more than 5% from baseline.
 
-| Test Type | Result | Assessment |
-|-----------|--------|------------|
-| **Sensitivity (Length)** | 1.3x threshold | Detects 30% length increase |
-| **Sensitivity (Population)** | 40% dominance | Detects 5.7x frequency shift |
-| **False Positive Rate** | 8.0% overall | Within acceptable range (<10%) |
-| **Prediction Drift FP** | 0.0% | Excellent calibration |
+**Prediction Drift** — Jensen-Shannon divergence and Wasserstein distance on class distribution. Triggers if JS divergence > 0.1.
+
+### Validation Results
+
+| Test | Result |
+|------|--------|
+| Length drift detection threshold | 1.3x (30% increase) |
+| Population drift detection threshold | 40% dominance (5.7x shift from 7% baseline) |
+| Slang/linguistic drift | Not detected — documented limitation |
+| Data drift false positive rate | 16% (8% overall across all detectors) |
+| Prediction drift false positive rate | 0% |
+
+**Documented limitation:** Statistical features (length, word count) are insensitive to vocabulary substitution. "depressed" → "down bad" doesn't change text length enough to trigger detection — motivating the multi-detector design and flagging the need for embedding-based semantic drift detection as future work.
 
 ---
 
-## 🏗️ Architecture
+## Architecture
+
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    Production System                    │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│  ┌──────────────┐      ┌──────────────┐                 │
-│  │   FastAPI    │◄────►│  DistilBERT  │                 │
-│  │   (8000)     │      │    Model     │                 │
-│  └──────┬───────┘      └──────────────┘                 │
-│         │                                               │
-│         ▼                                               │
-│  ┌──────────────┐      ┌──────────────┐                 │
-│  │ Drift        │      │  SQLite DB   │                 │
-│  │ Detectors    │◄────►│  (History)   │                 │
-│  └──────┬───────┘      └──────────────┘                 │
-│         │                                               │
-│         ▼                                               │
-│  ┌──────────────┐                                       │
-│  │  Streamlit   │                                       │
-│  │  Dashboard   │                                       │
-│  │   (8501)     │                                       │
-│  └──────────────┘                                       │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
-                    │
-                    ▼
-            ┌───────────────┐
-            │   AWS EC2     │
-            │   (t2.micro)  │
-            └───────────────┘
+Raw Text
+    │
+    ▼
+FastAPI (:8000) ──► DistilBERT (6-class)
+    │                     │
+    │◄────────────────────┘
+    │
+    ├──► Drift Detectors (PSI / KS / JS / Wasserstein)
+    │         │
+    │         ▼
+    │    SQLite (drift history)
+    │         │
+    └──► Streamlit Dashboard (:8501)
+
+Infrastructure: Docker on AWS EC2 t3.small (us-east-1)
+Model storage:  S3 (downloaded at build time)
+CI/CD:          GitHub Actions → GHCR → SSH deploy
 ```
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
-### Prerequisites
+### Run with Docker
 
-- Python 3.11+
-- Docker (optional, for containerized deployment)
-- AWS account (optional, for cloud deployment)
+The model downloads from S3 at build time — AWS credentials required:
 
-### 1. Clone Repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/mental-health-mlops.git
+git clone https://github.com/HumbleFool02/mental-health-mlops.git
 cd mental-health-mlops
-```
 
-### 2. Install Dependencies
-```bash
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+docker build -f Dockerfile.lightweight \
+  --build-arg AWS_ACCESS_KEY_ID=<your-key> \
+  --build-arg AWS_SECRET_ACCESS_KEY=<your-secret> \
+  --build-arg AWS_DEFAULT_REGION=us-east-1 \
+  -t mental-health-mlops:latest .
 
-# Install requirements
-pip install -r requirements.txt
-```
-
-### 3. Run Locally
-
-**Option A: Run API**
-```bash
-# Start FastAPI server
-uvicorn src.api.app:app --host 0.0.0.0 --port 8000
-
-# Access at: http://localhost:8000
-# API docs: http://localhost:8000/docs
-```
-
-**Option B: Run Dashboard**
-```bash
-# Start Streamlit dashboard
-streamlit run src/dashboard/drift_dashboard.py
-
-# Access at: http://localhost:8501
-```
-
-**Option C: Run Both with Docker**
-```bash
-# Build image
-docker build -f Dockerfile.lightweight -t mental-health-mlops:production .
-
-# Run container
 docker run -d \
   --name mlops-app \
   -p 8000:8000 \
   -p 8501:8501 \
-  mental-health-mlops:production
+  mental-health-mlops:latest
+```
 
-# Access API: http://localhost:8000
-# Access Dashboard: http://localhost:8501
+API: http://localhost:8000 | Dashboard: http://localhost:8501
+
+### Run Locally (without Docker)
+
+```bash
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+# Download model manually from S3
+aws s3 sync s3://mental-health-mlops-models/distilbert_exp2/ models/distilbert_exp2/
+aws s3 cp s3://mental-health-mlops-models/data/reference_data.csv data/processed/reference_data.csv
+
+# Start API
+uvicorn src.api.app:app --host 0.0.0.0 --port 8000
+
+# Start dashboard (separate terminal)
+streamlit run src/dashboard/drift_dashboard.py
 ```
 
 ---
 
-## 📦 Project Structure
-```
-mental-health-mlops/
-├── data/
-│   ├── raw/                    # Original datasets
-│   ├── processed/              # Preprocessed data (train/val/test)
-│   └── drift_monitoring.db     # Drift history database
-├── models/
-│   ├── distilbert_exp2/        # Trained DistilBERT model
-│   └── baseline/               # Baseline ML models
-├── src/
-│   ├── api/                    # FastAPI application
-│   │   ├── main.py            # API endpoints
-│   │   ├── model_loader.py    # Model loading
-│   │   └── static/            # Web UI
-│   ├── monitoring/             # Drift detection
-│   │   ├── data_drift.py      # PSI, KS tests
-│   │   ├── prediction_drift.py # JS divergence
-│   │   └── drift_simulator.py  # Test scenarios
-│   └── dashboard/              # Monitoring dashboard
-│       ├── drift_dashboard.py  # Streamlit app
-│       ├── drift_database.py   # Database interface
-│       └── traffic_simulator.py # Demo traffic
-├── experiments/                # Analysis & validation
-│   └── drift_analysis/
-│       ├── sensitivity_analysis.py
-│       ├── feature_attribution.py
-│       └── false_positive_test.py
-├── tests/                      # Unit & integration tests
-├── docs/                       # Documentation
-│   └── report/                # LaTeX project report
-├── Dockerfile.lightweight      # Production Dockerfile
-├── requirements.production.txt # Lean dependencies
-└── README.md
-```
+## API Usage
 
----
-
-## 🔬 Drift Detection System
-
-### Multi-Detector Approach
-
-The system implements three types of drift detection:
-
-#### 1. **Data Drift** (Statistical Distribution)
-- **Methods:** Population Stability Index (PSI), Kolmogorov-Smirnov test
-- **Monitors:** Text length, word count, vocabulary changes
-- **Threshold:** PSI > 0.1
-- **Result:** 16% false positive rate (acceptable)
-
-#### 2. **Concept Drift** (Performance Degradation)
-- **Methods:** Performance metric tracking (F1, recall, precision)
-- **Monitors:** Model accuracy over time
-- **Threshold:** >5% F1 drop
-
-#### 3. **Prediction Drift** (Output Distribution)
-- **Methods:** Jensen-Shannon divergence, Wasserstein distance
-- **Monitors:** Class distribution changes
-- **Threshold:** JS > 0.1
-- **Result:** 0% false positive rate (excellent)
-
-### Key Findings
-
-From comprehensive drift analysis:
-
-| Drift Type | Detection Threshold | Key Insight |
-|------------|-------------------|-------------|
-| **Length Drift** | 1.3x (30% increase) | Detected by `text_length`, `word_count` |
-| **Population Drift** | 40% dominance (5.7x shift) | Detected by prediction distribution |
-| **Slang/Linguistic** | Not detected | Statistical features insensitive to vocabulary changes |
-
-**Critical Insight:** Statistical drift detection is insufficient for linguistic changes. When "depressed" → "down bad" (slang), text length/word count remain stable, so distribution-based methods fail. This demonstrates why **multiple detector types** are essential.
-
----
-
-## 🧪 Validation & Testing
-
-### Sensitivity Analysis
-
-Determined minimum drift intensity for detection:
 ```bash
-python experiments/drift_analysis/sensitivity_analysis.py
-```
-
-**Results:**
-- Length drift detected at **1.3x** factor
-- Population drift detected at **40%** dominance
-- Slang drift **not detected** (reveals statistical method limitation)
-
-### Feature Attribution
-
-Identified which features detect which drift types:
-```bash
-python experiments/drift_analysis/feature_attribution.py
-```
-
-**Results:**
-- `text_length` and `word_count` → Length drift (PSI > 0.3)
-- `avg_word_length` → Multi-drift scenarios (PSI = 0.439)
-- No single feature catches all drift types
-
-### False Positive Testing
-
-Validated detector reliability on stable data:
-```bash
-python experiments/drift_analysis/false_positive_test.py
-```
-
-**Results:**
-- Data drift: 16% FP rate
-- Prediction drift: 0% FP rate
-- Overall: 8% (within acceptable <10%)
-
----
-
-## 🎭 Demo: Traffic Simulation
-
-Simulate 30 days of production traffic with gradual drift:
-```bash
-# Generate drift scenario
-python src/dashboard/traffic_simulator.py --days 30 --delay 10 --reset
-
-# Watch dashboard live at: http://localhost:8501
-```
-
-**Simulation Schedule:**
-- **Days 1-10:** ✅ Normal operations (no drift)
-- **Days 11-20:** ⚠️ Gradual drift (text lengths increasing)
-- **Days 21-30:** 🚨 Significant drift (population shift detected)
-
----
-
-## ☁️ AWS Deployment
-
-### Deployed Infrastructure
-
-- **Instance Type:** t2.micro (AWS Free Tier)
-- **Region:** us-east-1
-- **OS:** Ubuntu 22.04 LTS
-- **Container:** Docker
-- **Ports:** 8000 (API), 8501 (Dashboard)
-
-### Deployment Steps
-
-1. **Launch EC2 Instance**
-```bash
-# t2.micro, Ubuntu 22.04, 30GB storage
-```
-
-2. **Install Docker**
-```bash
-sudo apt-get update
-sudo apt-get install -y docker.io
-sudo usermod -aG docker ubuntu
-```
-
-3. **Deploy Application**
-```bash
-# Clone repo
-git clone https://github.com/YOUR_USERNAME/mental-health-mlops.git
-cd mental-health-mlops
-
-# Build and run
-docker build -f Dockerfile.lightweight -t mental-health-mlops:production .
-docker run -d --name mlops-app -p 8000:8000 -p 8501:8501 mental-health-mlops:production
-```
-
-4. **Configure Security Group**
-- Port 22 (SSH)
-- Port 8000 (API) - 0.0.0.0/0
-- Port 8501 (Dashboard) - 0.0.0.0/0
-
-**Live URLs:**
-- API: http://98.93.153.242:8000
-- Dashboard: http://98.93.153.242:8501
-
----
-
-## 📊 API Usage
-
-### Make a Prediction
-
-**cURL:**
-```bash
-curl -X POST "http://98.93.153.242:8000/predict" \
+# Predict
+curl -X POST "http://18.221.115.135:8000/predict" \
   -H "Content-Type: application/json" \
-  -d '{"text": "I feel very anxious and depressed"}'
+  -d '{"text": "I feel very anxious and cannot stop worrying"}'
+
+# Health check
+curl http://18.221.115.135:8000/health
 ```
 
-**Python:**
-```python
-import requests
-
-response = requests.post(
-    "http://98.93.153.242:8000/predict",
-    json={"text": "I feel very anxious and depressed"}
-)
-
-print(response.json())
-# Output: {"prediction": "Anxiety", "confidence": 0.89, ...}
-```
-
-**Response Format:**
 ```json
 {
   "prediction": "Anxiety",
@@ -363,155 +142,79 @@ print(response.json())
     "Bipolar": 0.0089,
     "Stress": 0.0064
   },
-  "timestamp": "2024-12-02T10:30:45.123Z"
+  "timestamp": "2026-07-16T10:30:45.123Z"
 }
 ```
 
-### Health Check
-```bash
-curl http://98.93.153.242:8000/health
+---
+
+## Project Structure
+
+```
+mental-health-mlops/
+├── .github/workflows/
+│   ├── test.yml              # pytest — 15/15 passing
+│   ├── docker-build.yml      # builds + pushes to GHCR
+│   └── deploy.yml            # SSH deploy to EC2 (manual trigger)
+├── src/
+│   ├── api/                  # FastAPI app, model loader, schemas
+│   ├── monitoring/           # Data, concept, prediction drift detectors
+│   └── dashboard/            # Streamlit dashboard + SQLite interface
+├── experiments/
+│   └── drift_analysis/       # Sensitivity, attribution, FP rate scripts
+│       └── results/          # JSON output from validation runs
+├── tests/                    # 15 tests — API (9) + drift detection (6)
+├── configs/config.yaml       # Central config
+├── Dockerfile.lightweight    # Production image (both services)
+└── requirements.production.txt
 ```
 
 ---
 
-## 🧪 Running Tests
+## CI/CD
 
-### Unit Tests
+Three workflows:
+
+- **test.yml** — runs on every push to `main`/`develop`. FastAPI tests use `TestClient` with mocked model loader (no live server needed). Drift detection tests use synthetic fixtures (no data files needed).
+- **docker-build.yml** — runs on push to `main`. Builds `Dockerfile.lightweight`, downloads model from S3, pushes image to GitHub Container Registry, smoke tests `/health`.
+- **deploy.yml** — manual trigger only. SSH into EC2, `git pull`, rebuild image, swap containers, poll `/health` for 240s.
+
+---
+
+## Running Tests
+
 ```bash
-# Run all tests
 pytest tests/ -v
+# 15 passed
 
-# Run specific test
-pytest tests/test_drift_detection.py -v
-
-# With coverage
 pytest tests/ --cov=src --cov-report=html
 ```
 
-### Integration Tests
-```bash
-# Test API endpoints
-pytest tests/test_api.py -v
+---
 
-# Test drift detection
-pytest tests/test_drift_detection.py -v
-```
+## Dataset
 
-**Test Results:** 16/16 tests passing ✅
+51,842 samples across six classes, stratified 50/20/30 train/val/test split:
+
+| Class | Samples | % |
+|-------|---------|---|
+| Normal | 16,351 | 31.5% |
+| Depression | 15,404 | 29.8% |
+| Suicidal | 10,653 | 20.6% |
+| Anxiety | 3,888 | 7.5% |
+| Bipolar | 2,877 | 5.5% |
+| Stress | 2,669 | 5.1% |
 
 ---
 
-## 📈 Monitoring Dashboard
+## Deployment
 
-The Streamlit dashboard provides real-time monitoring:
-
-### Features
-
-- **📊 Drift Score Timeline:** Historical PSI/JS divergence over time
-- **🎯 Current Status:** Real-time system health (Healthy/Warning/Critical)
-- **🔍 Feature Breakdown:** Per-feature drift analysis
-- **🔔 Alert Feed:** Recent drift events and warnings
-- **📉 Statistics:** Drift rate, average scores, detection frequency
-
-### Dashboard Views
-
-**Access at:** http://98.93.153.242:8501
-
-1. **Overview:** System status, latest drift check
-2. **Timeline:** Drift score chart with threshold lines
-3. **Features:** Bar chart showing which features drifted
-4. **Alerts:** Chronological feed of system events
-5. **Recommendations:** Actionable guidance based on drift status
+- **Instance:** AWS EC2 t3.small, us-east-1, Ubuntu 22.04 LTS
+- **Elastic IP:** 18.221.115.135 (static — survives instance stop/start)
+- **Model:** Stored in S3, downloaded at Docker build time
+- **Container:** Single Docker container running FastAPI (:8000) and Streamlit (:8501)
+- **Auto-restart:** `--restart unless-stopped`
 
 ---
 
-## 🛠️ Development
-
-### Install Development Dependencies
-```bash
-pip install -r requirements.txt  # Full dependencies including dev tools
-```
-
-### Code Quality
-```bash
-# Format code
-black src/ tests/
-
-# Lint
-flake8 src/ tests/
-
-# Type checking
-mypy src/
-```
-
-### Pre-commit Hooks
-```bash
-# Install pre-commit
-pip install pre-commit
-pre-commit install
-
-# Run manually
-pre-commit run --all-files
-```
-
----
-
-## 📚 Documentation
-
-- **API Docs:** http://98.93.153.242:8000/docs (Swagger UI)
-- **Project Report:** [docs/report/main.pdf](docs/report/main.pdf)
-- **Architecture:** [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
-- **Drift Detection:** [docs/DRIFT_DETECTION.md](docs/DRIFT_DETECTION.md)
-- **Deployment Guide:** [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
----
-
-<!-- ## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
---- -->
-
-## 🙏 Acknowledgments
-
-- **Dataset:** Mental health text data from [source]
-- **Models:** Hugging Face Transformers library
-- **Deployment:** AWS Free Tier
-- **Frameworks:** FastAPI, Streamlit, PyTorch
-
----
-
-## 🎯 Project Status
-
-**Current Version:** 1.0.0
-**Status:** ✅ Production Ready
-**Last Updated:** December 2024
-
-### Roadmap
-
-- [x] Data preprocessing pipeline
-- [x] Model training (baseline + transformer)
-- [x] Drift detection system
-- [x] Production API
-- [x] Monitoring dashboard
-- [x] Docker containerization
-- [x] AWS deployment
-- [ ] Embedding-based semantic drift detection
-- [ ] A/B testing framework
-- [ ] Model retraining automation
-
----
-
-**⭐ If you find this project useful, please consider giving it a star!**
+*Capstone project — Florida Institute of Technology, MS Software Engineering*
