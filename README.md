@@ -177,7 +177,7 @@ Three workflows:
 
 - **test.yml** — runs on every push to `main`/`develop`. FastAPI tests use `TestClient` with mocked model loader (no live server needed). Drift detection tests use synthetic fixtures (no data files needed).
 - **docker-build.yml** — runs on push to `main`. Builds `Dockerfile.lightweight`, downloads model from S3, pushes image to GitHub Container Registry, smoke tests `/health`.
-- **deploy.yml** — manual trigger only. SSH into EC2, `git pull`, rebuild image, swap containers, poll `/health` for 240s.
+- **deploy.yml** — manual trigger only. SSH into EC2, `git pull`, rebuild image, swap containers, poll `/health` for 90s.
 
 ---
 

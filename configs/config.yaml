@@ -51,15 +51,15 @@ training:
 
 # MLflow Configuration
 mlflow:
-  tracking_uri: http://localhost:5000
+  tracking_uri: null
   experiment_name: mental-health-sentiment-analysis
   run_name_prefix: run
-  artifact_location: s3://mental-health-mlops-artifacts
+  artifact_location: s3://mental-health-mlops-models
 
 # DVC Configuration
 dvc:
   remote: myremote
-  remote_url: s3://mental-health-mlops-data
+  remote_url: s3://mental-health-mlops-models
 
 # Evaluation Metrics
 evaluation:
@@ -96,4 +96,4 @@ monitoring:
   log_predictions: true
   alert_on_drift: true
   performance_threshold: 0.75
-  alert_email: admin@example.com
+  alert_email: null
