@@ -6,7 +6,7 @@
 
 End-to-end MLOps pipeline for mental health text classification with production drift detection and real-time monitoring. Fine-tunes DistilBERT on 51,842 samples across six categories, deploys via FastAPI on AWS EC2, and monitors for data, concept, and prediction drift in real time.
 
-**Live Demo:** http://18.221.115.135:8000
+**Live Demo:** http://18.221.115.135:8000/ui
 **Monitoring Dashboard:** http://18.221.115.135:8501
 **API Docs:** http://18.221.115.135:8000/docs
 
