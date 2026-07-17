@@ -1,5 +1,5 @@
 // API Base URL
-const API_URL = 'http://localhost:8000';
+const API_URL = '';
 
 // Chart instance
 let probabilityChart = null;
